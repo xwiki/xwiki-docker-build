@@ -35,3 +35,4 @@ RUN apt-get update && \
 
 COPY --chown=jenkins:jenkins vnc/.Xauthority .Xauthority
 COPY --chown=jenkins:jenkins vnc/.vnc .vnc
+ENV USER jenkins
