@@ -33,6 +33,9 @@ RUN apt-get update && \
     xfce4 xfce4-goodies xfonts-base tightvncserver && \
   rm -rf /var/lib/apt/lists/*
 
-COPY --chown=jenkins:jenkins vnc/.Xauthority .Xauthority
-COPY --chown=jenkins:jenkins vnc/.vnc .vnc
-ENV USER jenkins
+WORKDIR /root
+
+COPY vnc/.Xauthority .Xauthority
+COPY vnc/.vnc .vnc
+
+ENV USER root 
