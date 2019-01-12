@@ -33,9 +33,11 @@ RUN apt-get update && \
     xfce4 xfce4-goodies xfonts-base tightvncserver && \
   rm -rf /var/lib/apt/lists/*
 
-WORKDIR /root
+# Set the current directory to be the jenkins user directory so that we can set up the VNC config for the jenkins user
+WORKDIR /home/jenkins
 
-COPY vnc/.Xauthority .Xauthority
-COPY vnc/.vnc .vnc
+# Set up VNC files so that the VNC password doesn't need to be set to start the VNC server
+COPY --chown=jenkins:jenkins vnc/.Xauthority .Xauthority
+COPY --chown=jenkins:jenkins vnc/.vnc .vnc
 
-ENV USER root 
+ENV USER jenkins
