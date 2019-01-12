@@ -30,14 +30,12 @@ MAINTAINER XWiki Development Teeam <committers@xwiki.org>
 
 RUN apt-get update && \
   apt-get --no-install-recommends -y install \
-    xfce4 xfce4-goodies xfonts-base tightvncserver && \
+  vnc4server fluxbox && \
   rm -rf /var/lib/apt/lists/*
 
-# Set the current directory to be the jenkins user directory so that we can set up the VNC config for the jenkins user
-WORKDIR /home/jenkins
+WORKDIR /root
 
-# Set up VNC files so that the VNC password doesn't need to be set to start the VNC server
-COPY --chown=jenkins:jenkins vnc/.Xauthority .Xauthority
-COPY --chown=jenkins:jenkins vnc/.vnc .vnc
+COPY vnc/.Xauthority .Xauthority
+COPY vnc/.vnc .vnc
 
-ENV USER jenkins
+ENV USER root
