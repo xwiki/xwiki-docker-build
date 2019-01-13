@@ -30,7 +30,7 @@ MAINTAINER XWiki Development Teeam <committers@xwiki.org>
 
 RUN apt-get update && \
   apt-get --no-install-recommends -y install \
-  vnc4server fluxbox tigenvnc-common && \
+    xfce4 xfce4-goodies xfonts-base tightvncserver && \
   rm -rf /var/lib/apt/lists/*
 
 WORKDIR /root
