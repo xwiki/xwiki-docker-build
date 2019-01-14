@@ -38,4 +38,11 @@ WORKDIR /root
 COPY vnc/.Xauthority .Xauthority
 COPY vnc/.vnc .vnc
 
+WORKDIR /home/jenkins
+
+COPY --chown=jenkins:jenkins vnc/.Xauthority .Xauthority
+COPY --chown=jenkins:jenkins vnc/.vnc .vnc
+
+WORKDIR /root
+
 ENV USER root
