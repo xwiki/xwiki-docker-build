@@ -44,4 +44,9 @@ RUN echo "jenkins" | vncpasswd -f > .vnc/passwd
 # This is important as otherwise vncserver requires a password when started
 RUN chmod 0600 .vnc/passwd
 
+# ci.xwiki.org expects java to be available at /home/hudsonagent/java8
+RUN mkdir -p /home/hudsonagent
+RUN ln -fs /usr/lib/jvm/java-8-openjdk-amd64 /home/hudsonagent/java8
+RUN ln -fs /home/hudsonagent/java8 /home/hudsonagent/java
+
 ENV USER root
