@@ -38,11 +38,10 @@ WORKDIR /root
 COPY vnc/.Xauthority .Xauthority
 COPY vnc/.vnc .vnc
 
-WORKDIR /home/jenkins
+# Generate a password for XVNC
+RUN echo "jenkins" | vncpasswd -f > .vnc/passwd
 
-COPY --chown=jenkins:jenkins vnc/.Xauthority .Xauthority
-COPY --chown=jenkins:jenkins vnc/.vnc .vnc
-
-WORKDIR /root
+# This is important as otherwise vncserver requires a password when started
+RUN chmod 0600 .vnc/passwd
 
 ENV USER root
