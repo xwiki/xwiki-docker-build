@@ -50,4 +50,8 @@ RUN mkdir -p /home/hudsonagent
 RUN ln -fs /usr/lib/jvm/java-8-openjdk-amd64 /home/hudsonagent/java8
 RUN ln -fs /home/hudsonagent/java8 /home/hudsonagent/java
 
+# Set up the Maven repository configuration (settings.xml)
+RUN mkdir -p /root/.m2
+COPY maven/settings.xml /root/.m2/settings.xml
+
 ENV USER root
