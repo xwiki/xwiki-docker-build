@@ -50,7 +50,4 @@ RUN mkdir -p /home/hudsonagent
 RUN ln -fs /usr/lib/jvm/java-8-openjdk-amd64 /home/hudsonagent/java8
 RUN ln -fs /home/hudsonagent/java8 /home/hudsonagent/java
 
-# Test
-RUN ping -c 2 nexus.xwiki.org
-
 ENV USER root
