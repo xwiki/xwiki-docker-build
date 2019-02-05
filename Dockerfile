@@ -49,7 +49,7 @@ WORKDIR /root
 # Install a recent version of Java. We need >= 8u191-b12. See https://dev.xwiki.org/xwiki/bin/view/Community/Building/
 # Since jenkins/ssh-slave depends on Debian Stretch, which has only 8u181 as the latest version we need to remove it
 # and use another mechanism to install a recent Java. We use Sdkman.
-RUN apt purge openjdk-8-jdk -y && \
+RUN apt purge openjdk-8-jdk openjdk-8-jre-headless -y && \
   apt autoremove -y && \
   curl -s "https://get.sdkman.io" | bash && \
   /bin/bash -l -c 'source "/root/.sdkman/bin/sdkman-init.sh"' && \
@@ -59,7 +59,8 @@ RUN apt purge openjdk-8-jdk -y && \
 RUN mkdir -p /home/hudsonagent
 RUN ln -fs /root/.sdkman/candidates/java/current/bin/java /home/hudsonagent/java8
 RUN ln -fs /home/hudsonagent/java8 /home/hudsonagent/java
-ENV JAVA_HOME /home/hudsonagent/java
+RUN ln -fs /home/hudsonagent/java /usr/bin/java
+ENV JAVA_HOME /usr/bin/java
 
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
