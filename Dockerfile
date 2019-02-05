@@ -51,14 +51,15 @@ WORKDIR /root
 # and use another mechanism to install a recent Java. We use Sdkman.
 RUN apt purge openjdk-8-jdk -y && \
   apt autoremove -y && \
-  curl -s "https://get.sdkman.io" | bash
-RUN /bin/bash -l -c 'source "/root/.sdkman/bin/sdkman-init.sh"'
-RUN /bin/bash -l -c 'sdk install java 8.0.202-amzn'
+  curl -s "https://get.sdkman.io" | bash && \
+  /bin/bash -l -c 'source "/root/.sdkman/bin/sdkman-init.sh"' && \
+  /bin/bash -l -c 'sdk install java 8.0.202-amzn'
 
 # ci.xwiki.org expects java to be available at /home/hudsonagent/java8
 RUN mkdir -p /home/hudsonagent
 RUN ln -fs /root/.sdkman/candidates/java/current/bin/java /home/hudsonagent/java8
 RUN ln -fs /home/hudsonagent/java8 /home/hudsonagent/java
+ENV JAVA_HOME /home/hudsonagent/java
 
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
