@@ -60,7 +60,6 @@ RUN mkdir -p /home/hudsonagent
 RUN ln -fs /root/.sdkman/candidates/java/current/bin/java /home/hudsonagent/java8
 RUN ln -fs /home/hudsonagent/java8 /home/hudsonagent/java
 RUN ln -fs /home/hudsonagent/java /usr/bin/java
-ENV JAVA_HOME /usr/bin/java
 
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
@@ -77,3 +76,4 @@ RUN mkdir -p /root/.m2
 COPY maven/settings.xml /root/.m2/settings.xml
 
 ENV USER root
+ENV JAVA_HOME /root/.sdkman/candidates/java/current
