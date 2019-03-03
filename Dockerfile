@@ -55,12 +55,6 @@ RUN apt purge openjdk-8-jdk openjdk-8-jre-headless -y && \
   /bin/bash -l -c 'source "/root/.sdkman/bin/sdkman-init.sh"' && \
   /bin/bash -l -c 'sdk install java 8.0.202-amzn'
 
-# ci.xwiki.org expects java to be available at /home/hudsonagent/java8
-RUN mkdir -p /home/hudsonagent
-RUN ln -fs /root/.sdkman/candidates/java/current /home/hudsonagent/java8
-RUN ln -fs /home/hudsonagent/java8 /home/hudsonagent/java
-RUN ln -fs /home/hudsonagent/java/bin/java /usr/bin/java
-
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
 COPY vnc/.vnc .vnc
@@ -70,6 +64,23 @@ RUN echo "jenkins" | vncpasswd -f > .vnc/passwd
 
 # This is important as otherwise vncserver requires a password when started
 RUN chmod 0600 .vnc/passwd
+
+# Install Maven
+RUN wget https://www-us.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz && \
+  tar -xvzf apache-maven-3.6.0-bin.tar.gz && \
+  rm apache-maven-3.6.0-bin.tar.gz
+
+# ci.xwiki.org expects:
+# - Java to be available at /home/hudsonagent/java8
+# - Maven to be available at /home/hudsonagent/maven
+RUN mkdir -p /home/hudsonagent && \
+ ln -fs /root/.sdkman/candidates/java/current /home/hudsonagent/java8 && \
+ ln -fs /home/hudsonagent/java8 /home/hudsonagent/java && \
+ ln -fs /home/hudsonagent/java/bin/java /usr/bin/java && \
+ ln -fs /root/apache-maven-3.6.0 /home/hudsonagent/maven && \
+ echo '' >> ~/.bashrc && \
+ echo 'export M2_HOME=/home/hudsonagent/maven' >> ~/.bashrc && \
+ echo 'export PATH=${M2_HOME}/bin:${PATH}' >> ~/.bashrc
 
 # Set up the Maven repository configuration (settings.xml)
 RUN mkdir -p /root/.m2
