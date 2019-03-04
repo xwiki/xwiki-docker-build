@@ -42,7 +42,22 @@ RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debia
 RUN apt-get update && \
   apt-get --no-install-recommends -y install \
     xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce && \
-  rm -rf /var/lib/apt/lists/*
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+
+# Install Firefox.
+# Note: This won't be needed when we'll have all our functional tests use docker. However, as a transitional step,
+# we should provide it, so that all agents can use this image to build XWiki fully.
+ENV FIREFOX_VERSION 32.0.1
+ENV FIREFOX_DOWNLOAD_URL="https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION/linux-x86_64/en-US/firefox-$FIREFOX_VERSION.tar.bz2"
+RUN apt-get update && \
+  apt-get --no-install-recommends -y install libasound2 && \
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/* && \
+  wget --no-verbose -O /tmp/firefox.tar.bz2 $FIREFOX_DOWNLOAD_URL && \
+  rm -rf /opt/firefox && \
+  tar -C /opt -xjf /tmp/firefox.tar.bz2 && \
+  rm /tmp/firefox.tar.bz2 && \
+  mv /opt/firefox /opt/firefox-$FIREFOX_VERSION && \
+  ln -fs /opt/firefox-$FIREFOX_VERSION/firefox /usr/bin/firefox
 
 WORKDIR /root
 
