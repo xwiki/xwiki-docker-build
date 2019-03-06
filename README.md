@@ -28,7 +28,7 @@ The following steps show how to run the image and have the GUI be displayed on y
 socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"
 open -a Xquartz
 IP=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}')
-docker run -d --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/.m2:/root/.m2:delegated -v $HOME/dev/xwiki/xwiki-platform:/root/xwiki-platform:delegated -e DISPLAY=$IP:0 --privileged xwiki-jenkins-slave
+docker run -d --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/.m2:/root/.m2:delegated -v $HOME/dev/xwiki/xwiki-platform:/root/xwiki-platform:delegated -e DISPLAY=$IP:0 -p 8080:8080 --privileged xwiki-jenkins-slave
 ```
 
 Explanations:
@@ -41,5 +41,7 @@ Explanations:
   * Similarly the `-v $HOME/dev/xwiki/xwiki-platform:/root/xwiki-platform:delegated` is to avoid having to clone the
   XWiki Platform GitHub repository
   * The `-e DISPLAY=$IP:0` is to forward the display to your Mac.
+  * The `-p 8080:8080` is to be able to access any XWiki instance running in the container from a local browser with
+  `http://localhost:8080`
   * The `--privileged` is because... not sure why but it might be required for some cases ;)
 
