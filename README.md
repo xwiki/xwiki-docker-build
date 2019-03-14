@@ -13,6 +13,29 @@ This image adds the following XWiki-required build tools over the
 This image is built automatically by 
 [Dockerhub](https://cloud.docker.com/u/xwiki/repository/docker/xwiki/xwiki-jenkins-slave).
 
+CI Usage
+========
+
+To use on ci.xwiki.org:
+* Configure a Docker cloud
+  * Docker host URI: tcp:/<ip of agent host>:2376
+  * Image: xwiki/xwiki-jenkins-slave`
+  * Volumes: 
+     ```
+     /var/run/docker.sock:/var/run/docker.sock
+     /home/hudsonagent/.m2/settings.xml:/root/.m2/settings.xml
+     /home/hudsonagent/.ssh:/tmp/xwiki/.ssh:ro
+     ```
+     Explanations:
+       * `/var/run/docker.sock:/var/run/docker.sock`: to allow Docker out of Docker (DOOD) and be able to use Docker 
+         containers for our functional tests.
+       * `/home/hudsonagent/.m2/settings.xml:/root/.m2/settings.xml`: To allow `mvn deploy` to work so that it can
+         deploy built artifacts to nexus.xwiki.org.
+       * `/home/hudsonagent/.ssh:/tmp/xwiki/.ssh:ro`: To allow some Jenkins pipeline (such as the Clover one) to 
+         publish output to some other machines in the networ (such as publishing clover zip reports to maven.xwiki.org.  
+  * Remote File System Root: `/root`
+  * User: `root`
+  
 Local Usage
 ===========
 
