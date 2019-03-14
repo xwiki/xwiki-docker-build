@@ -103,3 +103,8 @@ COPY maven/settings.xml /root/.m2/settings.xml
 
 ENV USER root
 ENV JAVA_HOME /home/hudsonagent/java
+
+COPY ssh/setup-xwiki-ssh /usr/local/bin/setup-xwiki-ssh
+RUN chmod a+x /usr/local/bin/setup-xwiki-ssh
+
+ENTRYPOINT ["setup-xwiki-ssh"]
