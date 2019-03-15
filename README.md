@@ -18,8 +18,8 @@ CI Usage
 
 To use on ci.xwiki.org:
 * Configure a Docker cloud
-  * Docker host URI: tcp:/<ip of agent host>:2376
-  * Image: xwiki/xwiki-jenkins-slave`
+  * Docker host URI: `tcp:/<ip of agent host>:2376`
+  * Image: `xwiki/xwiki-jenkins-slave`
   * Volumes: 
      ```
      /var/run/docker.sock:/var/run/docker.sock
