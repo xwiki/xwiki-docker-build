@@ -27,6 +27,8 @@ if [ -d "/tmp/xwiki/.ssh" ]; then
   chmod 700 /root/.ssh
   chmod 600 /root/.ssh/*
   chmod 644 /root/.ssh/*.pub
+  # Add support for DSS keys (off by default in "recent" ssh clients)
+  echo "PubkeyAcceptedKeyTypes +ssh-dss" >> /etc/ssh/ssh_config
 fi
 
 setup-sshd "$@"
