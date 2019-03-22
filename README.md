@@ -51,7 +51,20 @@ The following steps show how to run the image and have the GUI be displayed on y
 socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"
 open -a Xquartz
 IP=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}')
-docker run -d --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/.m2:/root/.m2:delegated -v $HOME/dev/xwiki/xwiki-platform:/root/xwiki-platform:delegated -e DISPLAY=$IP:0 -p 8080:8080 --privileged xwiki-jenkins-slave
+
+cd ...navigate in the maven module with the pom.xml to build...
+
+docker run -d --rm \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v $HOME/.m2:/root/.m2:delegated \
+  -v $HOME/.git-credentials:/root/.git-credentials \
+  -v $HOME/.git-gitconfig:/root/.git-gitconfig \
+  -v $HOME/.gitconfig:/root/.gitconfig \
+  -v $HOME/.gitignore_global:/root/.gitignore_global \
+  -v $HOME/.ssh:/tmp/xwiki/.ssh:ro \
+  -v $HOME/.gnupg:/root/.gnupg \
+  -v `pwd`:/root/`basename \`pwd\``:delegated \
+  -e DISPLAY=$IP:0 -p 8080:8080 --privileged xwiki-jenkins-slave
 ```
 
 Explanations:
@@ -61,18 +74,12 @@ Explanations:
   [very slow on Mac](https://docs.docker.com/docker-for-mac/osxfs-caching/).
   * The `-v /var/run/docker.sock:/var/run/docker.sock` is for running Docker in Docker
   * The `-v $HOME/.m2:/root/.m2:delegated` is to avoid redownloading all dependencies by reusing your local Maven repo
-  * Similarly the `-v $HOME/dev/xwiki/xwiki-platform:/root/xwiki-platform:delegated` is to avoid having to clone the
-  XWiki Platform GitHub repository
+  * The `.git*` volume mappings are to have your Git config inside the container
+  * The `-v $HOME/.ssh:/tmp/xwiki/.ssh:ro` is to have your SSH keys inside the container (there's an entry script that will copy them from `/tmp/xwiki/.ssh` to `/root/.ssh` and set the correct permissions. The `ro` is just safety to make sure the container can never modify your keys.
+  * The `-v $HOME/.gnupg:/root/.gnupg` is to have your GPG key inside the container. This is needed when doing a Maven release for example.
+  * The ``` -v `pwd`:/root/`basename \`pwd\``:delegated ``` is to avoid having to clone the Maven module to build and/or to build with local changes
   * The `-e DISPLAY=$IP:0` is to forward the display to your Mac.
   * The `-p 8080:8080` is to be able to access any XWiki instance running in the container from a local browser with
   `http://localhost:8080`
   * The `--privileged` is because... not sure why but it might be required for some cases ;)
-
-If you want to build the current directory you can use:
-
-```
-docker run -d --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/.m2:/root/.m2:delegated -v $HOME/dev/xwiki/xwiki-platform:/root/xwiki-platform:delegated -v `pwd`:/root/`basename \`pwd\`` -e DISPLAY=$IP:0 -p 8080:8080 --privileged xwiki-jenkins-slave
-```
-
-This will allow to use your local changes from that directory and to not have to "git clone" in the container.
 
