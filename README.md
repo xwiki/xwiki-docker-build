@@ -68,3 +68,11 @@ Explanations:
   `http://localhost:8080`
   * The `--privileged` is because... not sure why but it might be required for some cases ;)
 
+If you want to build the current directory you can use:
+
+```
+docker run -d --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/.m2:/root/.m2:delegated -v $HOME/dev/xwiki/xwiki-platform:/root/xwiki-platform:delegated -v `pwd`:/root/`basename \`pwd\`` -e DISPLAY=$IP:0 -p 8080:8080 --privileged xwiki-jenkins-slave
+```
+
+This will allow to use your local changes from that directory and to not have to "git clone" in the container.
+
