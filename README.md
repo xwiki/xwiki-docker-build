@@ -17,6 +17,9 @@ CI Usage
 ========
 
 To use on ci.xwiki.org:
+* Make sure that the following exist on the agent machine (see below for more details):
+  * `/home/hudsonagent/.m2/settings.xml`
+  * `/home/hudsonagent/.ssh`
 * Configure a Docker cloud
   * Docker host URI: `tcp:/<ip of agent host>:2376`
   * Image: `xwiki/xwiki-jenkins-slave`
