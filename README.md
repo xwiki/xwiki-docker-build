@@ -38,7 +38,15 @@ To use on ci.xwiki.org:
          publish output to some other machines in the networ (such as publishing clover zip reports to maven.xwiki.org.  
   * Remote File System Root: `/root`
   * User: `root`
-  
+
+If you wish to log on a CI agent to reproduce a problem and manually execute a build you can do the following:
+* Ssh to the agent
+* Start the docker agent with `docker run -d --rm -v /var/run/docker.sock:/var/run/docker.sock -v /home/hudsonagent/.m2/settings.xml:/root/.m2/settings.xml -v /home/hudsonagent/.ssh:/tmp/xwiki/.ssh:ro xwiki/xwiki-jenkins-slave`
+* Get a shell inside the docker container with `docker exec -it <container id> bash -l`
+* Git clone a repo, for example: `git clone https://github.com/xwiki/xwiki-platform.git`
+* Run a Maven build, for example: `cd xwiki-platform/<some path>; mvn clean install`
+* If your build requires VNC, you can start a VNC server with `vncserver :1 -geometry 1280x960 -localhost -nolisten tcp` and set the `DISPLAY` with `export DISPLAY=:1`.
+
 Local Usage
 ===========
 
