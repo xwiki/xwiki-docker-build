@@ -46,6 +46,7 @@ If you wish to log on a CI agent to reproduce a problem and manually execute a b
 * Git clone a repo, for example: `git clone https://github.com/xwiki/xwiki-platform.git`
 * Run a Maven build, for example: `cd xwiki-platform/<some path>; mvn clean install`
 * If your build requires VNC, you can start a VNC server with `vncserver :1 -geometry 1280x960 -localhost -nolisten tcp` and set the `DISPLAY` with `export DISPLAY=:1`.
+* Stop the container once you're done with `docker stop <container id>`
 
 Local Usage
 ===========
