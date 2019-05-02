@@ -35,7 +35,7 @@ To use on ci.xwiki.org:
        * `/home/hudsonagent/.m2/settings.xml:/root/.m2/settings.xml`: To allow `mvn deploy` to work so that it can
          deploy built artifacts to nexus.xwiki.org.
        * `/home/hudsonagent/.ssh:/tmp/xwiki/.ssh:ro`: To allow some Jenkins pipeline (such as the Clover one) to 
-         publish output to some other machines in the network (such as publishing clover zip reports to maven.xwiki.org.  
+         publish output to some other machines in the network (such as publishing clover zip reports to `maven.xwiki.org`).  
   * Remote File System Root: `/root`
   * User: `root`
 
