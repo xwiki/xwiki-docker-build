@@ -45,6 +45,7 @@ If you wish to log on a CI agent to reproduce a problem and manually execute a b
 * Get a shell inside the docker container with `docker exec -it <container id> bash -l`
 * Git clone a repo, for example: `git clone https://github.com/xwiki/xwiki-platform.git`
 * Run a Maven build, for example: `cd xwiki-platform/<some path>; mvn clean install`
+  * Docker test example: `mvn clean integration-test -Dxwiki.checkstyle.skip=true -Dxwiki.surefire.captureconsole.skip=true -Dxwiki.revapi.skip=true -Dmaven.build.dir=target/mysql-5.7-5.1.45-tomcat-8.5-chrome -Dxwiki.test.ui.database=mysql -Dxwiki.test.ui.databaseTag=5.7 -Dxwiki.test.ui.jdbcVersion=5.1.45 -Dxwiki.test.ui.servletEngine=tomcat -Dxwiki.test.ui.servletEngineTag=8.5 -Dxwiki.test.ui.browser=chrome -Dxwiki.test.ui.verbose=true`
 * If your build requires VNC, you can start a VNC server with `vncserver :1 -geometry 1280x960 -localhost -nolisten tcp` and set the `DISPLAY` with `export DISPLAY=:1`.
 * Stop the container once you're done with `docker stop <container id>`
 
