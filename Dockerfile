@@ -68,7 +68,7 @@ RUN apt purge openjdk-8-jdk openjdk-8-jre-headless -y && \
   apt autoremove -y && \
   curl -s "https://get.sdkman.io" | bash && \
   /bin/bash -l -c 'source "/root/.sdkman/bin/sdkman-init.sh"' && \
-  /bin/bash -l -c 'sdk install java 8.0.202-amzn'
+  /bin/bash -l -c 'sdk install java 8.0.212-amzn'
 
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
