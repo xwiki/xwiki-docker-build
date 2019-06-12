@@ -11,7 +11,7 @@ This image adds the following XWiki-required build tools over the
 * Firefox 32.0.1 (for running our Selenium-2 based functional tests)
 
 This image is built automatically by 
-[Dockerhub](https://cloud.docker.com/u/xwiki/repository/docker/xwiki/xwiki-jenkins-slave).
+[Dockerhub](https://hub.docker.com/r/xwiki/xwiki-jenkins-slave).
 
 CI Usage
 ========
