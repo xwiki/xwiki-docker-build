@@ -37,6 +37,7 @@ RUN apt-get update && \
     gnupg2 \
     zip \
     software-properties-common
+
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
 RUN apt-get update && \
@@ -61,14 +62,16 @@ RUN apt-get update && \
 
 WORKDIR /root
 
-# Install a recent version of Java. We need >= 8u191-b12. See https://dev.xwiki.org/xwiki/bin/view/Community/Building/
-# Since jenkins/ssh-slave depends on Debian Stretch, which has only 8u181 as the latest version we need to remove it
-# and use another mechanism to install a recent Java. We use Sdkman.
-RUN apt purge openjdk-8-jdk openjdk-8-jre-headless -y && \
-  apt autoremove -y && \
-  curl -s "https://get.sdkman.io" | bash && \
-  /bin/bash -l -c 'source "/root/.sdkman/bin/sdkman-init.sh"' && \
-  /bin/bash -l -c 'sdk install java 8.0.212-amzn'
+
+# Install the most recent version of Java8
+RUN apt-get -y upgrade openjdk-8-jdk openjdk-8-jre-headless
+
+# Add Zulu repository for Java7
+# Instructions from https://docs.azul.com/zulu/zuludocs/#ZuluUserGuide/PrepareZuluPlatform/AttachAPTRepositoryUbuntuOrDebianSys.htm
+# We're doing it at the beginning to avoid calling apt-get update several times.
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9
+RUN echo 'deb http://repos.azulsystems.com/debian stable main' > /etc/apt/sources.list.d/zulu.list
+RUN apt-get update && apt-get -y install zulu-7
 
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
@@ -87,9 +90,11 @@ RUN wget https://www-us.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-mave
 
 # ci.xwiki.org expects:
 # - Java to be available at /home/hudsonagent/java8
+# - Java7 to be available at /home/hudsonagent/java7
 # - Maven to be available at /home/hudsonagent/maven
 RUN mkdir -p /home/hudsonagent && \
- ln -fs /root/.sdkman/candidates/java/current /home/hudsonagent/java8 && \
+ ln -fs /usr/lib/jvm/java-8-openjdk-amd64 /home/hudsonagent/java8 && \
+ ln -fs /usr/lib/jvm/zulu-7-amd64 /home/hudsonagent/java7 && \
  ln -fs /home/hudsonagent/java8 /home/hudsonagent/java && \
  ln -fs /home/hudsonagent/java/bin/java /usr/bin/java && \
  ln -fs /root/apache-maven-3.6.0 /home/hudsonagent/maven && \
