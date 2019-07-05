@@ -62,13 +62,11 @@ RUN apt-get update && \
 
 WORKDIR /root
 
-
 # Install the most recent version of Java8
-RUN apt-get -y upgrade openjdk-8-jdk openjdk-8-jre-headless
+RUN apt-get update && apt-get -y install openjdk-8-jdk openjdk-8-jre-headless
 
 # Add Zulu repository for Java7
 # Instructions from https://docs.azul.com/zulu/zuludocs/#ZuluUserGuide/PrepareZuluPlatform/AttachAPTRepositoryUbuntuOrDebianSys.htm
-# We're doing it at the beginning to avoid calling apt-get update several times.
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9
 RUN echo 'deb http://repos.azulsystems.com/debian stable main' > /etc/apt/sources.list.d/zulu.list
 RUN apt-get update && apt-get -y install zulu-7
