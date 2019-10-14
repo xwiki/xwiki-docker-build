@@ -82,9 +82,9 @@ RUN echo "jenkins" | vncpasswd -f > .vnc/passwd
 RUN chmod 0600 .vnc/passwd
 
 # Install Maven
-RUN wget https://www-us.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz && \
-  tar -xvzf apache-maven-3.6.0-bin.tar.gz && \
-  rm apache-maven-3.6.0-bin.tar.gz
+RUN wget https://www-us.apache.org/dist/maven/maven-3/3.6.2/binaries/apache-maven-3.6.2-bin.tar.gz && \
+  tar -xvzf apache-maven-3.6.2-bin.tar.gz && \
+  rm apache-maven-3.6.2-bin.tar.gz
 
 # ci.xwiki.org expects:
 # - Java to be available at /home/hudsonagent/java8
@@ -95,7 +95,7 @@ RUN mkdir -p /home/hudsonagent && \
  ln -fs /usr/lib/jvm/zulu-7-amd64 /home/hudsonagent/java7 && \
  ln -fs /home/hudsonagent/java8 /home/hudsonagent/java && \
  ln -fs /home/hudsonagent/java/bin/java /usr/bin/java && \
- ln -fs /root/apache-maven-3.6.0 /home/hudsonagent/maven && \
+ ln -fs /root/apache-maven-3.6.2 /home/hudsonagent/maven && \
  echo '' >> ~/.bashrc && \
  echo 'export M2_HOME=/home/hudsonagent/maven' >> ~/.bashrc && \
  echo 'export PATH=${M2_HOME}/bin:${PATH}' >> ~/.bashrc
