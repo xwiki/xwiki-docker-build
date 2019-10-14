@@ -48,7 +48,7 @@ RUN apt-get update && \
 # Install Firefox.
 # Note: This won't be needed when we'll have all our functional tests use docker. However, as a transitional step,
 # we should provide it, so that all agents can use this image to build XWiki fully.
-ENV FIREFOX_VERSION 32.0.1
+ENV FIREFOX_VERSION 69.0.3
 ENV FIREFOX_DOWNLOAD_URL="https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION/linux-x86_64/en-US/firefox-$FIREFOX_VERSION.tar.bz2"
 RUN apt-get update && \
   apt-get --no-install-recommends -y install libasound2 && \
