@@ -44,7 +44,7 @@ RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debia
 # socker (docker on docker) and we want to reduce likelihood of issues.
 RUN apt-get update && \
   apt-get --no-install-recommends -y install \
-    xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce=18.06.3-ce && \
+    xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce=18.06.3~ce~3-0~debian && \
   rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 # Install Firefox.
