@@ -65,7 +65,8 @@ RUN apt-get update && \
   wget --no-verbose -O /tmp/firefox2.tar.bz2 $FIREFOX_DOWNLOAD_URL_2 && \
   tar -C /opt -xjf /tmp/firefox2.tar.bz2 && \
   rm /tmp/firefox2.tar.bz2 && \
-  mv /opt/firefox /opt/firefox-$FIREFOX_VERSION_2
+  mv /opt/firefox /opt/firefox-$FIREFOX_VERSION_2 && \
+  ln -fs /opt/firefox-$FIREFOX_VERSION_2/firefox /usr/bin/firefox-$FIREFOX_VERSION_2
 
 WORKDIR /root
 
