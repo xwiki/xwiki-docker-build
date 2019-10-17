@@ -40,9 +40,11 @@ RUN apt-get update && \
 
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+# Note: We must install the same version of Docker that is installed on the CI agents since we share the same docker
+# socker (docker on docker) and we want to reduce likelihood of issues.
 RUN apt-get update && \
   apt-get --no-install-recommends -y install \
-    xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce && \
+    xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce=18.06.3-ce && \
   rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 # Install Firefox.
