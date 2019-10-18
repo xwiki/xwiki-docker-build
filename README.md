@@ -8,7 +8,7 @@ This image adds the following XWiki-required build tools over the
 * VNC Server
 * Docker Client (to run our Docker-based tests)
 * Recent Java 8 version (Amazon Corretto)
-* Firefox 32.0.1 (for running our Selenium-2 based functional tests)
+* Firefox 32.0.1 (for running our Selenium-2 based functional tests) + newer version of Firefox (for running our Selenium-3 based functional tests that are not yet Docker tests)
 
 This image is built automatically by 
 [Dockerhub](https://hub.docker.com/r/xwiki/xwiki-jenkins-slave).
