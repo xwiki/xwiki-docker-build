@@ -82,8 +82,8 @@ RUN echo 'deb http://repos.azulsystems.com/debian stable main' > /etc/apt/source
 RUN apt-get update && apt-get -y install zulu-7
 
 # Copy VNC config files
-COPY vnc .Xauthority
-COPY vnc .vnc
+COPY vnc/.Xauthority .Xauthority
+COPY vnc/.vnc .vnc
 
 # Generate a password for XVNC
 RUN echo "jenkins" | vncpasswd -f > .vnc/passwd
@@ -112,7 +112,7 @@ RUN mkdir -p /home/hudsonagent && \
 
 # Set up the Maven repository configuration (settings.xml)
 RUN mkdir -p /root/.m2
-COPY maven /root/.m2/settings.xml
+COPY maven/settings.xml /root/.m2/settings.xml
 
 # Set locales
 RUN apt-get install -y locales
@@ -125,7 +125,7 @@ ENV LC_ALL en_US.UTF-8
 ENV USER root
 ENV JAVA_HOME /home/hudsonagent/java
 
-COPY ssh /usr/local/bin/setup-xwiki-ssh
+COPY ssh/setup-xwiki-ssh /usr/local/bin/setup-xwiki-ssh
 RUN chmod a+x /usr/local/bin/setup-xwiki-ssh
 
 ENTRYPOINT ["setup-xwiki-ssh"]
