@@ -3,7 +3,6 @@ target
 target-eclipse
 
 # Gradle Build
-build
 .gradle
 
 # IDEA
