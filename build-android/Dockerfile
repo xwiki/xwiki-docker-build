@@ -52,6 +52,8 @@ RUN echo y | sdkmanager platform-tools "build-tools;29.0.2"
 RUN echo y | sdkmanager platform-tools "platforms;android-29"
 RUN echo y | sdkmanager platform-tools "build-tools;28.0.3"
 RUN echo y | sdkmanager platform-tools "platforms;android-28"
+RUN echo y | sdkmanager emulator
+RUN echo y | sdkmanager "system-images;android-19;google_apis;armeabi-v7a"
 
 ADD $XWIKI_LTS_ZIP_URL /opt/
 RUN unzip -q /opt/$XWIKI_LTS_NAME.zip -d /opt && rm /opt/$XWIKI_LTS_NAME.zip
