@@ -92,7 +92,7 @@ RUN echo "jenkins" | vncpasswd -f > .vnc/passwd
 RUN chmod 0600 .vnc/passwd
 
 # Install Maven
-RUN wget https://www-us.apache.org/dist/maven/maven-3/3.6.2/binaries/apache-maven-3.6.2-bin.tar.gz && \
+RUN wget https://archive.apache.org/dist/maven/maven-3/3.6.2/binaries/apache-maven-3.6.2-bin.tar.gz && \
   tar -xvzf apache-maven-3.6.2-bin.tar.gz && \
   rm apache-maven-3.6.2-bin.tar.gz
 
