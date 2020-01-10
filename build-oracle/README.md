@@ -40,7 +40,7 @@ The following custom steps were followed:
   alter session set "_ORACLE_SCRIPT"=true;
   ```
   Create the user and permissions:
-  ````
+  ```
   create user xwiki identified by xwiki;
   grant connect to xwiki;
   grant resource to xwiki;
