@@ -1,5 +1,4 @@
-Description
-===========
+# Description
 
 Custom Docker image for the XWiki project, used to spawn Jenkins Agents for https://ci.xwiki.org.
 
@@ -13,10 +12,10 @@ This image adds the following XWiki-required build tools over the
 This image is built automatically by 
 [Dockerhub](https://hub.docker.com/r/xwiki/build).
 
-CI Usage
-========
+# CI Usage
 
-To use on ci.xwiki.org:
+## Setup for ci.xwiki.org
+
 * Make sure that the following exist on the agent machine (see below for more details):
   * `/home/hudsonagent/.m2/settings.xml`
   * `/home/hudsonagent/.ssh`
@@ -39,6 +38,8 @@ To use on ci.xwiki.org:
   * Remote File System Root: `/root`
   * User: `root`
 
+## Manual execution on CI agent
+
 If you wish to log on a CI agent to reproduce a problem and manually execute a build you can do the following:
 * Ssh to the agent
 * Start the docker agent with `docker run -d --rm -v /var/run/docker.sock:/var/run/docker.sock -v /home/hudsonagent/.m2/settings.xml:/root/.m2/settings.xml -v /home/hudsonagent/.ssh:/tmp/xwiki/.ssh:ro xwiki/build`
@@ -49,13 +50,11 @@ If you wish to log on a CI agent to reproduce a problem and manually execute a b
 * If your build requires VNC, you can start a VNC server with `vncserver :1 -geometry 1280x960 -localhost -nolisten tcp` and set the `DISPLAY` with `export DISPLAY=:1`.
 * Stop the container once you're done with `docker stop <container id>`
 
-Local Usage
-===========
+# Local Usage
 
 It can be useful to be able to reproduce a CI issue locally on your machine.
 
-On Mac
-------
+## On Mac
 
 The following steps show how to run the image and have the GUI be displayed on your Mac (follow this 
 [tutorial](https://cntnr.io/running-guis-with-docker-on-mac-os-x-a14df6a76efc) to install the right tools).
@@ -65,7 +64,7 @@ socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"
 open -a Xquartz
 IP=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}')
 
-cd ...navigate in the maven module with the pom.xml to build...
+cd ...navigate locally in the maven module with the pom.xml to build...
 
 docker run -d --rm \
   -v /var/run/docker.sock:/var/run/docker.sock \
@@ -96,3 +95,20 @@ Explanations:
   `http://localhost:8080`
   * The `--privileged` is because... not sure why but it might be required for some cases ;)
 
+## On Linux
+
+Same as on Mac but someone will need to figure out and test how to have the UI displayed locally on the machine :)
+
+```
+docker run -d --rm \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v $HOME/.m2:/root/.m2:delegated \
+  -v $HOME/.git-credentials:/root/.git-credentials \
+  -v $HOME/.git-gitconfig:/root/.git-gitconfig \
+  -v $HOME/.gitconfig:/root/.gitconfig \
+  -v $HOME/.gitignore_global:/root/.gitignore_global \
+  -v $HOME/.ssh:/tmp/xwiki/.ssh:ro \
+  -v $HOME/.gnupg:/root/.gnupg \
+  -v `pwd`:/root/`basename \`pwd\``:delegated \
+  -p 8080:8080 --privileged xwiki/build
+```
