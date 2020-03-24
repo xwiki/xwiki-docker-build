@@ -70,6 +70,7 @@ Then:
 Notes:
 * If you want to map your machine's local Maven repository or other options, see below.
 * If you run some Selenium2-based functional tests they require a DISPLAY. See below.
+  * Otherwise you'll get some failure such as `Caused by: org.openqa.selenium.WebDriverException: invalid argument: can't kill an exited process`.
 
 ## On Mac
 
