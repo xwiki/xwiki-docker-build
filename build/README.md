@@ -67,7 +67,9 @@ Then:
 * Git clone the repo to build, for example: `git clone https://github.com/xwiki/xwiki-platform.git`
 * Navigate to the directory you wish to build and issue the maven command
 
-If you want to map your machine's local Maven repository or other options, see below.
+Notes:
+* If you want to map your machine's local Maven repository or other options, see below.
+* If you run some Selenium2-based functional tests they require a DISPLAY. See below.
 
 ## On Mac
 
