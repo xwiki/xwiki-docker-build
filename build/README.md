@@ -54,6 +54,23 @@ If you wish to log on a CI agent to reproduce a problem and manually execute a b
 
 It can be useful to be able to reproduce a CI issue locally on your machine.
 
+## For all OSes
+
+If you want the minimum and have something the most similar to what exeecutes on the CI agents, you can run:
+
+```
+docker run -d --rm \
+  -v $HOME/.ssh:/tmp/xwiki/.ssh:ro \
+  xwiki/build
+```
+
+Then:
+* Use `docker exec -it <container id> bash -l` to open a shell inside the container 
+* Git clone the repo to build, for example: `git clone https://github.com/xwiki/xwiki-platform.git`
+* Navigate to the directory you wish to build and issue the maven command
+
+If you want to map your machine's local Maven repository or other options, see below.
+
 ## On Mac
 
 The following steps show how to run the image and have the GUI be displayed on your Mac (follow this 
