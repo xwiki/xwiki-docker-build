@@ -59,9 +59,7 @@ It can be useful to be able to reproduce a CI issue locally on your machine.
 If you want the minimal build setup and have something the most similar to what executes on the CI agents, you can run:
 
 ```
-docker run -d --rm \
-  -v $HOME/.ssh:/tmp/xwiki/.ssh:ro \
-  xwiki/build
+docker run -d --rm xwiki/build
 ```
 
 Then:
