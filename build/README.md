@@ -59,11 +59,10 @@ It can be useful to be able to reproduce a CI issue locally on your machine.
 If you want the minimal build setup and have something the most similar to what executes on the CI agents, you can run:
 
 ```
-docker run -d --rm xwiki/build
+docker run --rm -it --entrypoint "/bin/bash" xwiki/build
 ```
 
 Then:
-* Use `docker exec -it <container id> bash -l` to open a shell inside the container 
 * Git clone the repo to build, for example: `git clone https://github.com/xwiki/xwiki-platform.git`
 * Navigate to the directory you wish to build and issue the maven command
 
