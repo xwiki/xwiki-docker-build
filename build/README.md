@@ -59,7 +59,7 @@ It can be useful to be able to reproduce a CI issue locally on your machine.
 If you want the minimal build setup and have something the most similar to what executes on the CI agents, you can run:
 
 ```
-docker run --rm -it --entrypoint "/bin/bash" xwiki/build
+docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock --entrypoint "/bin/bash" xwiki/build
 ```
 
 Then:
