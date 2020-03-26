@@ -28,7 +28,7 @@ FROM jenkins/ssh-slave
 
 MAINTAINER XWiki Development Teeam <committers@xwiki.org>
 
-# Install VNC + Docker CE
+# Install VNC + Docker CE + lsof (to list open ports for debugging reasons)
 RUN apt-get update && \
   apt-get --no-install-recommends -y install \
     apt-transport-https \
@@ -36,6 +36,7 @@ RUN apt-get update && \
     curl \
     gnupg2 \
     zip \
+    lsof \
     software-properties-common
 
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
