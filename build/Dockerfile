@@ -52,7 +52,7 @@ RUN apt-get update && \
 # Note 1: This won't be needed when we'll have all our functional tests use docker. However, as a transitional step,
 # we should provide it, so that all agents can use this image to build XWiki fully.
 # Note 2: We also install FF 32.0.1 for older branches still using Selenium 2.x
-ENV FIREFOX_VERSION_1 69.0.3
+ENV FIREFOX_VERSION_1 74.0
 ENV FIREFOX_DOWNLOAD_URL_1="https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION_1/linux-x86_64/en-US/firefox-$FIREFOX_VERSION_1.tar.bz2"
 ENV FIREFOX_VERSION_2 32.0.1
 ENV FIREFOX_DOWNLOAD_URL_2="https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION_2/linux-x86_64/en-US/firefox-$FIREFOX_VERSION_2.tar.bz2"
