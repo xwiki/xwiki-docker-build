@@ -17,8 +17,8 @@ This image is built automatically by
 ## Setup for ci.xwiki.org
 
 * Make sure that the following exist on the agent machine (see below for more details):
-  * `/home/hudsonagent/.m2/settings.xml`
-  * `/home/hudsonagent/.ssh`
+  * `/home/hudsonagent/.m2/settings.xml`: Needed to download Maven dependencies not present in the local Maven repository from https://nexus.xwiki.org.
+  * `/home/hudsonagent/.ssh`: Needed to deploy built artifacts to the XWiki remote Maven repository at https://nexus.xwiki.org.
 * Configure a Docker cloud
   * Docker host URI: `tcp:/<ip of agent host>:2376`
   * Image: `xwiki/build`
