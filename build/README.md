@@ -1,6 +1,6 @@
 # Description
 
-Custom Docker image for the XWiki project, used to spawn Jenkins Agents for https://ci.xwiki.org.
+Custom Docker image for the XWiki project, used to spawn Jenkins Agents for https://ci.xwiki.org but can also he used to build XWiki on any machine having Docker installed.
 
 This image adds the following XWiki-required build tools over the 
 [`jenkins/ssh-slave`](https://hub.docker.com/r/jenkinsci/ssh-slave) base image provided by Jenkins:
