@@ -52,13 +52,15 @@ If you wish to log on a CI agent to reproduce a problem and manually execute a b
 
 # Local Usage
 
-It can be useful to be able to reproduce a CI issue locally on your machine.
+It can be useful to be able to reproduce a CI issue locally on your machine or simply as a simple environment to build XWiki locally (all that is need is Docker installed).
 
 ## For all OSes
 
+### Interactive mode
+
 If you want the minimal build setup and have something the most similar to what executes on the CI agents, you can run:
 
-```
+```bash
 docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock --entrypoint "/bin/bash" xwiki/build
 ```
 
@@ -71,12 +73,27 @@ Notes:
 * If you run some Selenium2-based functional tests they require a DISPLAY. See below.
   * Otherwise you'll get some failure such as `Caused by: org.openqa.selenium.WebDriverException: invalid argument: can't kill an exited process`.
 
+### Scripted mode
+
+If you want to execute everything in one go, here's an example that overrides the entry point and build the whole XWiki Platform (including functional tests):
+
+```bash
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --entrypoint "/bin/bash" xwiki/build -c " \
+git clone https://github.com/xwiki/xwiki-platform.git && \
+cd xwiki-platform && \
+export MAVEN_OPTS='-Xmx2048m -Xms512m' && \
+vncserver :1 -geometry 1280x960 -localhost -nolisten tcp && \
+export DISPLAY=:1 && \
+/home/hudsonagent/maven/bin/mvn --no-transfer-progress install -Plegacy,integration-tests,docker,snapshot \
+"
+```
+
 ## On Mac
 
 The following steps show how to run the image and have the GUI be displayed on your Mac (follow this 
 [tutorial](https://cntnr.io/running-guis-with-docker-on-mac-os-x-a14df6a76efc) to install the right tools).
 
-```
+```bash
 socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"
 open -a Xquartz
 IP=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}')
@@ -116,7 +133,7 @@ Explanations:
 
 Same as on Mac but someone will need to figure out and test how to have the UI displayed locally on the machine :)
 
-```
+```bash
 docker run -d --rm \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v $HOME/.m2:/root/.m2:delegated \
