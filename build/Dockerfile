@@ -28,6 +28,13 @@ FROM jenkins/ssh-slave
 
 MAINTAINER XWiki Development Teeam <committers@xwiki.org>
 
+# check that Java 8 is already installed by:
+# 1. checking if the JAVA_HOME is set
+# 2. checking that the version of Java is openjdk
+# 3. checking that the actual version installed is an 1.8.0 (we allow the build to be upgraded)
+# We perform those checks very early to have a fail fast, since it all depends on the parent image.
+RUN test ! -z $JAVA_HOME && $JAVA_HOME/bin/java -version 2>&1 | grep "OpenJDK" | grep "build 1.8.0"
+
 # Install VNC + Docker CE + lsof (to list open ports for debugging reasons)
 RUN apt-get update && \
   apt-get --no-install-recommends -y install \
@@ -73,9 +80,6 @@ RUN apt-get update && \
 
 WORKDIR /root
 
-# Install the most recent version of Java8
-RUN apt-get update && apt-get -y install openjdk-8-jdk openjdk-8-jre-headless
-
 # Add Zulu repository for Java7
 # Instructions from https://docs.azul.com/zulu/zuludocs/#ZuluUserGuide/PrepareZuluPlatform/AttachAPTRepositoryUbuntuOrDebianSys.htm
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9
@@ -98,11 +102,12 @@ RUN wget https://archive.apache.org/dist/maven/maven-3/3.6.2/binaries/apache-mav
   rm apache-maven-3.6.2-bin.tar.gz
 
 # ci.xwiki.org expects:
-# - Java to be available at /home/hudsonagent/java8
+# - Java8 to be available at /home/hudsonagent/java8
 # - Java7 to be available at /home/hudsonagent/java7
 # - Maven to be available at /home/hudsonagent/maven
+# - Default java to be Java8
 RUN mkdir -p /home/hudsonagent && \
- ln -fs /usr/lib/jvm/java-8-openjdk-amd64 /home/hudsonagent/java8 && \
+ ln -fs $JAVA_HOME /home/hudsonagent/java8 && \
  ln -fs /usr/lib/jvm/zulu-7-amd64 /home/hudsonagent/java7 && \
  ln -fs /home/hudsonagent/java8 /home/hudsonagent/java && \
  ln -fs /home/hudsonagent/java/bin/java /usr/bin/java && \
