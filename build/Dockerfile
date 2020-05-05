@@ -28,7 +28,9 @@ FROM jenkins/ssh-slave
 
 MAINTAINER XWiki Development Teeam <committers@xwiki.org>
 
-# check that Java 8 is already installed by:
+# The base image already installs Java. So we don't install it for speed and duplication reasons,
+# but we ensure that it's Java 8 that is installed, since that's what XWiki's master build requires.
+# We do that by:
 # 1. checking if the JAVA_HOME is set
 # 2. checking that the version of Java is openjdk
 # 3. checking that the actual version installed is an 1.8.0 (we allow the build to be upgraded)
