@@ -131,10 +131,9 @@ Explanations:
 
 ## On Linux
 
-Same as on Mac but someone will need to figure out and test how to have the UI displayed locally on the machine :)
-
-```bash
-docker run -d --rm \
+Similarly to Mac, but with some extra arguments when staring the container:
+```
+sudo docker run --rm -it \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v $HOME/.m2:/root/.m2:delegated \
   -v $HOME/.git-credentials:/root/.git-credentials \
@@ -144,5 +143,39 @@ docker run -d --rm \
   -v $HOME/.ssh:/tmp/xwiki/.ssh:ro \
   -v $HOME/.gnupg:/root/.gnupg \
   -v `pwd`:/root/`basename \`pwd\``:delegated \
-  -p 8080:8080 --privileged xwiki/build
+  -p 8080:8080 \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -v $XAUTHORITY:/root/.Xauthority \
+  -e DISPLAY \
+  --net=host \
+  --entrypoint "/bin/bash" \
+  xwiki/build
+```
+
+Note that these 4 lines are needed in order to be able to perform X11 forwarding (i.e. to allow the docker container to display the window of the firefox process it creates during regular Selenium tests, i.e. not the ones for the docker-in-docker executions):
+```
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -v $XAUTHORITY:/root/.Xauthority \
+  -e DISPLAY \
+  --net=host \
+```
+
+### Examples
+
+Run and individual Selenium tests class part of the "Flavor Test - *" ("Flavor Test - UI) build step (with Firefox running inside the docker container but displayed in your X11 session, for which we have set up forwarding):
+```
+# cd ~/xwiki-platform/xwiki-platform-distribution/xwiki-platform-distribution-flavor/xwiki-platform-distribution-flavor-test/xwiki-platform-distribution-flavor-test-ui
+# mvn clean install -Plegacy,integration-tests,jetty,hsqldb,firefox -Dpattern=UserClassFieldTest
+```
+
+Run the "Flavor Test - Upgrade" tests:
+```
+# cd ~/xwiki-platform/xwiki-platform-distribution/xwiki-platform-distribution-flavor/xwiki-platform-distribution-flavor-test/xwiki-platform-distribution-flavor-test-upgrade/xwiki-platform-distribution-flavor-test-upgrade-1011
+# mvn clean install -Plegacy,integration-tests,jetty,hsqldb,firefox
+```
+
+Run Docker tests, either part of the "Main" build step or of the "Docker" builds, with Firefox running inside the docker-in-docker container and visible only by connecting with a VNC client to the VNC server started by the container:
+```
+# cd ~/xwiki-platform/xwiki-platform-core/xwiki-platform-flamingo/xwiki-platform-flamingo-theme/xwiki-platform-flamingo-theme-test/
+# mvn clean install -Plegacy,integration-tests,snapshot,docker -Dxwiki.checkstyle.skip=true -Dxwiki.surefire.captureconsole.skip=true -Dxwiki.revapi.skip=true
 ```
