@@ -17,7 +17,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 # 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 # ---------------------------------------------------------------------------
-FROM jenkins/ssh-slave
+FROM jenkins/ssh-slave:jdk11
 
 #    ____  ____  ____      ____  _   __        _
 #   |_  _||_  _||_  _|    |_  _|(_) [  |  _   (_)
@@ -28,14 +28,7 @@ FROM jenkins/ssh-slave
 
 MAINTAINER XWiki Development Teeam <committers@xwiki.org>
 
-# The base image already installs Java. So we don't install it for speed and duplication reasons,
-# but we ensure that it's Java 8 that is installed, since that's what XWiki's master build requires.
-# We do that by:
-# 1. checking if the JAVA_HOME is set
-# 2. checking that the version of Java is openjdk
-# 3. checking that the actual version installed is an 1.8.0 (we allow the build to be upgraded)
-# We perform those checks very early to have a fail fast, since it all depends on the parent image.
-RUN test ! -z $JAVA_HOME && $JAVA_HOME/bin/java -version 2>&1 | grep "OpenJDK" | grep "build 1.8.0"
+# Note: The base image already installs Java 11. So we don't need to install it again.
 
 # Install VNC + Docker CE + lsof (to list open ports for debugging reasons)
 RUN apt-get update && \
@@ -54,8 +47,7 @@ RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debia
 # socker (docker on docker) and we want to reduce likelihood of issues.
 RUN apt-get update && \
   apt-get --no-install-recommends -y install \
-    xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce=18.06.3~ce~3-0~debian && \
-  rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+    xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce=18.06.3~ce~3-0~debian
 
 # Install Firefox.
 # Note 1: This won't be needed when we'll have all our functional tests use docker. However, as a transitional step,
@@ -65,9 +57,7 @@ ENV FIREFOX_VERSION_1 74.0
 ENV FIREFOX_DOWNLOAD_URL_1="https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION_1/linux-x86_64/en-US/firefox-$FIREFOX_VERSION_1.tar.bz2"
 ENV FIREFOX_VERSION_2 32.0.1
 ENV FIREFOX_DOWNLOAD_URL_2="https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION_2/linux-x86_64/en-US/firefox-$FIREFOX_VERSION_2.tar.bz2"
-RUN apt-get update && \
-  apt-get --no-install-recommends -y install libasound2 && \
-  rm -rf /var/lib/apt/lists/* /var/cache/apt/* && \
+RUN apt-get --no-install-recommends -y install libasound2 && \
   wget --no-verbose -O /tmp/firefox1.tar.bz2 $FIREFOX_DOWNLOAD_URL_1 && \
   rm -rf /opt/firefox && \
   tar -C /opt -xjf /tmp/firefox1.tar.bz2 && \
@@ -82,11 +72,18 @@ RUN apt-get update && \
 
 WORKDIR /root
 
-# Add Zulu repository for Java7
+# Add Zulu repository to install Java7
 # Instructions from https://docs.azul.com/zulu/zuludocs/#ZuluUserGuide/PrepareZuluPlatform/AttachAPTRepositoryUbuntuOrDebianSys.htm
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9
 RUN echo 'deb http://repos.azulsystems.com/debian stable main' > /etc/apt/sources.list.d/zulu.list
-RUN apt-get update && apt-get -y install zulu-7
+RUN apt-get update && \
+  apt-get --no-install-recommends -y install zulu-7
+
+# Install Java 8
+RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add - && \
+  add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ && \
+  apt-get update && \
+  apt-get install adoptopenjdk-8-hotspot
 
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
@@ -104,12 +101,14 @@ RUN wget https://archive.apache.org/dist/maven/maven-3/3.6.2/binaries/apache-mav
   rm apache-maven-3.6.2-bin.tar.gz
 
 # ci.xwiki.org expects:
+# - Java11 to be available at /home/hudsonagent/java11
 # - Java8 to be available at /home/hudsonagent/java8
 # - Java7 to be available at /home/hudsonagent/java7
 # - Maven to be available at /home/hudsonagent/maven
-# - Default java to be Java8
+# - Default java to be Java 8
 RUN mkdir -p /home/hudsonagent && \
- ln -fs $JAVA_HOME /home/hudsonagent/java8 && \
+ ln -fs $JAVA_HOME /home/hudsonagent/java11 && \
+ ln -fs /usr/lib/jvm/adoptopenjdk-8-hotspot-amd64 /home/hudsonagent/java8 && \
  ln -fs /usr/lib/jvm/zulu-7-amd64 /home/hudsonagent/java7 && \
  ln -fs /home/hudsonagent/java8 /home/hudsonagent/java && \
  ln -fs /home/hudsonagent/java/bin/java /usr/bin/java && \
@@ -123,9 +122,10 @@ RUN mkdir -p /root/.m2
 COPY maven/settings.xml /root/.m2/settings.xml
 
 # Set locales
-RUN apt-get install -y locales
+RUN apt-get --no-install-recommends -y install locales && \
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-    locale-gen
+  locale-gen
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
