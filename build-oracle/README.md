@@ -35,10 +35,17 @@ The following custom steps were followed:
   alter database datafile '/opt/oracle/oradata/XWIKI/users01.dbf' resize 100M;
   ```
 * Create the XWiki user:
+
+  Make sure that the user password won't expire (by default it exires after 180 days): 
+  ```
+  alter profile "DEFAULT" limit password_life_time unlimited;
+  ```
+  
   Allows creating a simple user named `XWIKI`. Without this Oracle will forbid the usage of such a simple name:
   ```
   alter session set "_ORACLE_SCRIPT"=true;
   ```
+  
   Create the user and permissions:
   ```
   create user xwiki identified by xwiki;
