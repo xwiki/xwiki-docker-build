@@ -34,6 +34,14 @@ The following custom steps were followed:
   ```
   alter database datafile '/opt/oracle/oradata/XWIKI/users01.dbf' resize 100M;
   ```
+* Increase the max number of processes to 500 (default was 150), to avoid `ORA-12516, TNS:listener could not find available handler with matching protocol stack` errors:
+  ```
+  alter system set PROCESSES=500 scope = spfile;
+  ```
+* Increase max open cursors to 3000 (default was 300), to avoid `ORA-01000: maximum open cursors exceeded` errors:
+  ```
+  alter system set open_cursors = 3000 scope=both;
+  ```
 * Create the XWiki user:
 
   Make sure that the user password won't expire (by default it exires after 180 days): 
