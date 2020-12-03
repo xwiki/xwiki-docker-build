@@ -120,6 +120,7 @@ RUN mkdir -p /home/hudsonagent && \
 # Set up the Maven repository configuration (settings.xml)
 RUN mkdir -p /root/.m2
 COPY maven/settings.xml /root/.m2/settings.xml
+COPY maven/xwiki-commons-settings.xml /root/.m2/xwiki-commons-settings.xml
 
 # Set locales
 RUN apt-get --no-install-recommends -y install locales && \

@@ -18,6 +18,7 @@ This image is built automatically by
 
 * Make sure that the following exist on the agent machine (see the explanations below for more details):
   * `/home/hudsonagent/.m2/settings.xml`
+  * `/home/hudsonagent/.m2/xwiki-commons-settings.xml`
   * `/home/hudsonagent/.ssh`
 * Configure a Docker cloud
   * Docker host URI: `tcp:/<ip of agent host>:2376`
@@ -26,13 +27,14 @@ This image is built automatically by
      ```
      /var/run/docker.sock:/var/run/docker.sock
      /home/hudsonagent/.m2/settings.xml:/root/.m2/settings.xml
+     /home/hudsonagent/.m2/xwiki-commons-settings.xml:/root/.m2/xwiki-commons-settings.xml
      /home/hudsonagent/.ssh:/tmp/xwiki/.ssh:ro
      ```
      Explanations:
        * `/var/run/docker.sock:/var/run/docker.sock`: to allow Docker out of Docker (DOOD) and be able to use Docker 
          containers for our functional tests.
-       * `/home/hudsonagent/.m2/settings.xml:/root/.m2/settings.xml`: To allow `mvn deploy` to work so that it can
-         deploy built artifacts to nexus.xwiki.org.
+       * `/home/hudsonagent/.m2/settings.xml:/root/.m2/settings.xml`: Provide the repositories where to find artifacts not located on Maven Central.
+       * `/home/hudsonagent/.m2/xwiki-commons-settings.xml:/root/.m2/xwiki-commons-settings.xml`: Maven repositories setup specific to xwiki-commons build.
        * `/home/hudsonagent/.ssh:/tmp/xwiki/.ssh:ro`: To allow some Jenkins pipeline (such as the Clover one) to 
          publish output to some other machines in the network (such as publishing clover zip reports to `maven.xwiki.org`).  
   * Remote File System Root: `/root`
