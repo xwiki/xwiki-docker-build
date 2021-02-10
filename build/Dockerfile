@@ -101,6 +101,7 @@ RUN wget https://archive.apache.org/dist/maven/maven-3/3.6.2/binaries/apache-mav
   rm apache-maven-3.6.2-bin.tar.gz
 
 # ci.xwiki.org expects:
+# - Java14 to be available at /home/hudsonagent/java14
 # - Java11 to be available at /home/hudsonagent/java11
 # - Java8 to be available at /home/hudsonagent/java8
 # - Java7 to be available at /home/hudsonagent/java7
@@ -108,6 +109,7 @@ RUN wget https://archive.apache.org/dist/maven/maven-3/3.6.2/binaries/apache-mav
 # - Default java to be Java 8
 RUN mkdir -p /home/hudsonagent && \
  ln -fs $JAVA_HOME /home/hudsonagent/java11 && \
+ ln -fs /usr/lib/jvm/adoptopenjdk-14-hotspot-amd64 /home/hudsonagent/java14 && \
  ln -fs /usr/lib/jvm/adoptopenjdk-8-hotspot-amd64 /home/hudsonagent/java8 && \
  ln -fs /usr/lib/jvm/zulu-7-amd64 /home/hudsonagent/java7 && \
  ln -fs /home/hudsonagent/java8 /home/hudsonagent/java && \
