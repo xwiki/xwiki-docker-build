@@ -79,11 +79,11 @@ RUN echo 'deb http://repos.azulsystems.com/debian stable main' > /etc/apt/source
 RUN apt-get update && \
   apt-get --no-install-recommends -y install zulu-7
 
-# Install Java 8
+# Install Java 8 & java 14
 RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add - && \
   add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ && \
   apt-get update && \
-  apt-get install adoptopenjdk-8-hotspot
+  apt-get install adoptopenjdk-8-hotspot adoptopenjdk-14-hotspot
 
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
