@@ -135,7 +135,7 @@ ENV LC_ALL en_US.UTF-8
 
 ENV USER root
 ENV JAVA_HOME /home/hudsonagent/java
-ENV OPENSSL_CONF ""
+ENV OPENSSL_CONF "/etc/ssl"
 COPY ssh/setup-xwiki-ssh /usr/local/bin/setup-xwiki-ssh
 RUN chmod a+x /usr/local/bin/setup-xwiki-ssh
 
