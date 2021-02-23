@@ -115,7 +115,7 @@ RUN mkdir -p /home/hudsonagent && \
  ln -fs /usr/lib/jvm/zulu-7-amd64 /home/hudsonagent/java7 && \
  ln -fs /home/hudsonagent/java8 /home/hudsonagent/java && \
  ln -fs /home/hudsonagent/java/bin/java /usr/bin/java && \
- ln -fs /root/apache-maven-3.6.2 /home/hudsonagent/maven && \
+ ln -fs /root/apache-maven-$MAVEN_VERSION /home/hudsonagent/maven && \
  echo '' >> ~/.bashrc && \
  echo 'export M2_HOME=/home/hudsonagent/maven' >> ~/.bashrc && \
  echo 'export PATH=${M2_HOME}/bin:${PATH}' >> ~/.bashrc
