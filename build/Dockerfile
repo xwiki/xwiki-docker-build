@@ -96,9 +96,10 @@ RUN echo "jenkins" | vncpasswd -f > .vnc/passwd
 RUN chmod 0600 .vnc/passwd
 
 # Install Maven
-RUN wget https://archive.apache.org/dist/maven/maven-3/3.6.2/binaries/apache-maven-3.6.2-bin.tar.gz && \
-  tar -xvzf apache-maven-3.6.2-bin.tar.gz && \
-  rm apache-maven-3.6.2-bin.tar.gz
+ENV MAVEN_VERSION 3.6.3
+RUN wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz && \
+  tar -xvzf apache-maven-$MAVEN_VERSION-bin.tar.gz && \
+  rm apache-maven-$MAVEN_VERSION-bin.tar.gz
 
 # ci.xwiki.org expects:
 # - Java14 to be available at /home/hudsonagent/java14
