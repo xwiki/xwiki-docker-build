@@ -26,7 +26,7 @@ FROM jenkins/ssh-slave:jdk11
 #    _/ /'`\ \_     \  /\  /    | |  | |`\ \  | |
 #   |____||____|     \/  \/    [___][__|  \_][___]
 
-MAINTAINER XWiki Development Teeam <committers@xwiki.org>
+MAINTAINER XWiki Development Team <committers@xwiki.org>
 
 # Note: The base image already installs Java 11. So we don't need to install it again.
 
