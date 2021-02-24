@@ -123,9 +123,9 @@ RUN mkdir -p /home/hudsonagent && \
   ln -fs /home/hudsonagent/java/bin/java /usr/bin/java && \
   ln -fs /root/apache-maven-$MAVEN_VERSION /home/hudsonagent/maven && \
   # Use /etc/profile so that Maven is in all paths for all shells (sh, bash, etc)
-  echo '' >> /etc/profile && \
-  echo 'export M2_HOME=/home/hudsonagent/maven' >> /etc/profile && \
-  echo 'export PATH=${M2_HOME}/bin:${PATH}' >> /etc/profile
+  echo '' >> /etc/environment && \
+  echo 'export M2_HOME=/home/hudsonagent/maven' >> /etc/environment && \
+  echo 'export PATH=${M2_HOME}/bin:${PATH}' >> /etc/environment
 
 # Set up the Maven repository configuration (settings.xml)
 RUN mkdir -p /root/.m2
