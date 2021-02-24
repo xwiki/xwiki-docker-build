@@ -115,16 +115,17 @@ RUN wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/a
 # - Maven to be available at /home/hudsonagent/maven
 # - Default java to be Java 8
 RUN mkdir -p /home/hudsonagent && \
- ln -fs $JAVA_HOME /home/hudsonagent/java11 && \
- ln -fs /usr/lib/jvm/adoptopenjdk-14-hotspot-amd64 /home/hudsonagent/java14 && \
- ln -fs /usr/lib/jvm/adoptopenjdk-8-hotspot-amd64 /home/hudsonagent/java8 && \
- ln -fs /usr/lib/jvm/zulu-7-amd64 /home/hudsonagent/java7 && \
- ln -fs /home/hudsonagent/java8 /home/hudsonagent/java && \
- ln -fs /home/hudsonagent/java/bin/java /usr/bin/java && \
- ln -fs /root/apache-maven-$MAVEN_VERSION /home/hudsonagent/maven && \
- echo '' >> ~/.bashrc && \
- echo 'export M2_HOME=/home/hudsonagent/maven' >> ~/.bashrc && \
- echo 'export PATH=${M2_HOME}/bin:${PATH}' >> ~/.bashrc
+  ln -fs $JAVA_HOME /home/hudsonagent/java11 && \
+  ln -fs /usr/lib/jvm/adoptopenjdk-14-hotspot-amd64 /home/hudsonagent/java14 && \
+  ln -fs /usr/lib/jvm/adoptopenjdk-8-hotspot-amd64 /home/hudsonagent/java8 && \
+  ln -fs /usr/lib/jvm/zulu-7-amd64 /home/hudsonagent/java7 && \
+  ln -fs /home/hudsonagent/java8 /home/hudsonagent/java && \
+  ln -fs /home/hudsonagent/java/bin/java /usr/bin/java && \
+  ln -fs /root/apache-maven-$MAVEN_VERSION /home/hudsonagent/maven && \
+  # Use /etc/profile so that Maven is in all paths for all shells (sh, bash, etc)
+  echo '' >> /etc/profile && \
+  echo 'export M2_HOME=/home/hudsonagent/maven' >> /etc/profile && \
+  echo 'export PATH=${M2_HOME}/bin:${PATH}' >> /etc/profile
 
 # Set up the Maven repository configuration (settings.xml)
 RUN mkdir -p /root/.m2
