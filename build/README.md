@@ -29,7 +29,7 @@ This image is built automatically by
      /home/hudsonagent/.m2/settings.xml:/root/.m2/settings.xml
      /home/hudsonagent/.m2/xwiki-commons-settings.xml:/root/.m2/xwiki-commons-settings.xml
      /home/hudsonagent/.ssh:/tmp/xwiki/.ssh:ro
-     /home/hudsonagent/.testcontainers.durations:/root/.testcontainers.durations
+     /home/hudsonagent/.xwiki:/root/.xwiki
      ```
      Explanations:
        * `/var/run/docker.sock:/var/run/docker.sock`: to allow Docker out of Docker (DOOD) and be able to use Docker 
@@ -38,7 +38,7 @@ This image is built automatically by
        * `/home/hudsonagent/.m2/xwiki-commons-settings.xml:/root/.m2/xwiki-commons-settings.xml`: Maven repositories setup specific to xwiki-commons build.
        * `/home/hudsonagent/.ssh:/tmp/xwiki/.ssh:ro`: To allow some Jenkins pipeline (such as the Clover one) to 
          publish output to some other machines in the network (such as publishing clover zip reports to `maven.xwiki.org`).
-       * `/home/hudsonagent/.testcontainers.durations:/root/.testcontainers.durations`: This is a cache file used by the XWiki Docker Test framework to make sure that Docker images are not constantly pulled from DockerHub (which has a 100 or 200 pull rate limit every 6 hours). Without this persistent cache file, the images will be pulled every time they're used.
+       * `/home/hudsonagent/.xwiki:/root/.xwiki`: Inside this directory a cache file is used by the XWiki Docker Test framework to make sure that Docker images are not constantly pulled from DockerHub (which has a 100 or 200 pull rate limit every 6 hours). Without this persistent cache file, the images will be pulled every time they're used.
   * Remote File System Root: `/root`
   * User: `root`
 
