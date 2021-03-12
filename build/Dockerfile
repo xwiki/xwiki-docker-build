@@ -123,9 +123,12 @@ RUN mkdir -p /home/hudsonagent && \
   ln -fs /home/hudsonagent/java8 /home/hudsonagent/java && \
   ln -fs /home/hudsonagent/java/bin/java /usr/bin/java && \
   ln -fs /root/apache-maven-$MAVEN_VERSION /home/hudsonagent/maven && \
-  # Use /etc/profile.d so that Maven is in all paths for all shells (sh, bash, etc)
+  # Use /etc/profile.d so that Maven is in all paths for all shells (sh, bash, etc), when using login, for example
+  # with "docker exec -it ... bash -l".
   echo 'export M2_HOME=/home/hudsonagent/maven' > /etc/profile.d/xwiki.sh && \
   echo 'export PATH=$M2_HOME/bin:$PATH' >> /etc/profile.d/xwiki.sh
+# Needed so that invocation through "docker run ... --entrypoint "/bin/sh" or "/bin/bash" work fine (i.e without login)
+ENV PATH="/home/hudsonagent/maven/bin:${PATH}"
 
 # Set up the Maven repository configuration (settings.xml)
 RUN mkdir -p /root/.m2
