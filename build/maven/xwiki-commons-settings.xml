@@ -21,5 +21,6 @@
 -->
 
 <settings>
-  
+  <!-- The file is empty because we only want to depend on Maven Central contrary to the default settings.xml.
+       Unfortunately there is no Maven CLI parameter to tell Maven to ignore the default settings.xml -->
 </settings>
