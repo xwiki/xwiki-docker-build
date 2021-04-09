@@ -18,7 +18,6 @@ This image is built automatically by
 
 * Make sure that the following exist on the agent machine (see the explanations below for more details):
   * `/home/hudsonagent/.m2/settings.xml`
-  * `/home/hudsonagent/.m2/xwiki-commons-settings.xml`
   * `/home/hudsonagent/.ssh`
 * Configure a Docker cloud
   * Docker host URI: `tcp:/<ip of agent host>:2376`
@@ -27,15 +26,13 @@ This image is built automatically by
      ```
      /var/run/docker.sock:/var/run/docker.sock
      /home/hudsonagent/.m2/settings.xml:/root/.m2/settings.xml
-     /home/hudsonagent/.m2/xwiki-commons-settings.xml:/root/.m2/xwiki-commons-settings.xml
      /home/hudsonagent/.ssh:/tmp/xwiki/.ssh:ro
      /home/hudsonagent/.xwiki:/root/.xwiki
      ```
      Explanations:
        * `/var/run/docker.sock:/var/run/docker.sock`: to allow Docker out of Docker (DOOD) and be able to use Docker 
          containers for our functional tests.
-       * `/home/hudsonagent/.m2/settings.xml:/root/.m2/settings.xml`: Provide the repositories where to find artifacts not located on Maven Central.
-       * `/home/hudsonagent/.m2/xwiki-commons-settings.xml:/root/.m2/xwiki-commons-settings.xml`: Maven repositories setup specific to xwiki-commons build.
+       * `/home/hudsonagent/.m2/settings.xml:/root/.m2/settings.xml`: Provide the repositories where to find artifacts not located on Maven Central and potential credentials needed by various plugins.
        * `/home/hudsonagent/.ssh:/tmp/xwiki/.ssh:ro`: To allow some Jenkins pipeline (such as the Clover one) to 
          publish output to some other machines in the network (such as publishing clover zip reports to `maven.xwiki.org`).
        * `/home/hudsonagent/.xwiki:/root/.xwiki`: Inside this directory a cache file is used by the XWiki Docker Test framework to make sure that Docker images are not constantly pulled from DockerHub (which has a 100 or 200 pull rate limit every 6 hours). Without this persistent cache file, the images will be pulled every time they're used.

@@ -130,10 +130,9 @@ RUN mkdir -p /home/hudsonagent && \
 # Needed so that invocation through "docker run ... --entrypoint "/bin/sh" or "/bin/bash" work fine (i.e without login)
 ENV PATH="/home/hudsonagent/maven/bin:${PATH}"
 
-# Set up the Maven repository configuration (settings.xml)
+# Set up the default Maven repository configuration (settings.xml)
 RUN mkdir -p /root/.m2
 COPY maven/settings.xml /root/.m2/settings.xml
-COPY maven/xwiki-commons-settings.xml /root/.m2/xwiki-commons-settings.xml
 
 # Set locales
 RUN apt-get --no-install-recommends -y install locales && \
