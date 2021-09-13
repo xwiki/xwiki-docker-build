@@ -26,7 +26,6 @@ This image is built automatically by
      ```
      type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock
      type=bind,source=/home/hudsonagent/.m2/settings.xml,destination=/root/.m2/settings.xml
-     type=bind,source=/home/hudsonagent/.m2/xwiki-commons-settings.xml,destination=/root/.m2/xwiki-commons-settings.xml
      type=bind,source=/home/hudsonagent/.ssh,destination=/tmp/xwiki/.ssh,readonly
      type=bind,source=/home/hudsonagent/.xwiki,destination=/root/.xwiki
      type=bind,source=/home/hudsonagent/.m2/.gradle-enterprise/keys.properties,destination=/root/.m2/.gradle-enterprise/keys.properties
