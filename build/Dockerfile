@@ -17,6 +17,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 # 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 # ---------------------------------------------------------------------------
+# TOOO: Upgrade to jenkins/ssh-agent:jdk11 since jenkins/ssh-slave is deprecated
 FROM jenkins/ssh-slave:jdk11
 
 #    ____  ____  ____      ____  _   __        _
@@ -46,20 +47,21 @@ RUN apt-get update && \
     lsof \
     software-properties-common \
     net-tools
-
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
 # Note: We must install the same version of Docker that is installed on the CI agents since we share the same docker
-# socker (docker on docker) and we want to reduce likelihood of issues.
+# socket (docker on docker) and we want to reduce likelihood of issues.
 RUN apt-get update && \
   apt-get --no-install-recommends -y install \
-    xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce=18.06.3~ce~3-0~debian
+    xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce=5:20.10.8~3-0~debian-buster
 
 # Install Firefox.
 # Note 1: This won't be needed when we'll have all our functional tests use docker. However, as a transitional step,
 # we should provide it, so that all agents can use this image to build XWiki fully.
-# Note 2: We also install FF 32.0.1 for older branches still using Selenium 2.x
-ENV FIREFOX_VERSION_1 74.0
+# Note 2: The FF version we install is the version of the selenium/standalone-firefox-debug image used by TestContainers
+# See https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting/#HFirefoxVersionUsed
+# Note 3: We also install FF 32.0.1 for older branches still using Selenium 2.x
+ENV FIREFOX_VERSION_1 92.0.1
 ENV FIREFOX_DOWNLOAD_URL_1="https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION_1/linux-x86_64/en-US/firefox-$FIREFOX_VERSION_1.tar.bz2"
 ENV FIREFOX_VERSION_2 32.0.1
 ENV FIREFOX_DOWNLOAD_URL_2="https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION_2/linux-x86_64/en-US/firefox-$FIREFOX_VERSION_2.tar.bz2"
@@ -85,11 +87,26 @@ RUN echo 'deb http://repos.azulsystems.com/debian stable main' > /etc/apt/source
 RUN apt-get update && \
   apt-get --no-install-recommends -y install zulu-7
 
-# Install Java 8 & java 14
-RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add - && \
-  add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ && \
-  apt-get update && \
-  apt-get --yes install adoptopenjdk-8-hotspot adoptopenjdk-14-hotspot
+# Install Java 8
+# TODO: Remove once we support Java 17 fully
+RUN wget --no-verbose -O /usr/lib/jvm/java8.tar.gz https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u312-b07/OpenJDK8U-jdk_x64_linux_hotspot_8u312b07.tar.gz && \
+  tar -C /usr/lib/jvm -xzf /usr/lib/jvm/java8.tar.gz && \
+  rm /usr/lib/jvm/java8.tar.gz
+
+# Install Java 16. We need this because:
+# - For Sonar, we need a JVM >= 11
+# - We should be using Java 17 (LTS and supposed to be supported by XWiki) but right now we cannot run XWiki's build on  \
+#   Java 17 because of Spoon (see https://github.com/INRIA/spoon/issues/4251).
+# Thus we use the next best java version which is Java 16.
+# TODO: Remove this when XWiki builds with Java 17.
+RUN wget --no-verbose -O /usr/lib/jvm/java16.tar.gz https://github.com/adoptium/temurin16-binaries/releases/download/jdk-16.0.2%2B7/OpenJDK16U-jdk_x64_linux_hotspot_16.0.2_7.tar.gz && \
+  tar -C /usr/lib/jvm -xzf /usr/lib/jvm/java16.tar.gz && \
+  rm /usr/lib/jvm/java16.tar.gz
+
+# Install Java 17
+RUN wget --no-verbose -O /usr/lib/jvm/java17.tar.gz https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.1%2B12/OpenJDK17U-jdk_x64_linux_hotspot_17.0.1_12.tar.gz && \
+  tar -C /usr/lib/jvm -xzf /usr/lib/jvm/java17.tar.gz && \
+  rm /usr/lib/jvm/java17.tar.gz
 
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
@@ -101,14 +118,14 @@ RUN echo "jenkins" | vncpasswd -f > .vnc/passwd
 # This is important as otherwise vncserver requires a password when started
 RUN chmod 0600 .vnc/passwd
 
-# Install Maven
+# Install the minimal Maven version supported by the XWiki build
 ENV MAVEN_VERSION 3.6.3
 RUN wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz && \
   tar -xvzf apache-maven-$MAVEN_VERSION-bin.tar.gz && \
   rm apache-maven-$MAVEN_VERSION-bin.tar.gz
 
 # ci.xwiki.org expects:
-# - Java14 to be available at /home/hudsonagent/java14
+# - Java17 to be available at /home/hudsonagent/java17
 # - Java11 to be available at /home/hudsonagent/java11
 # - Java8 to be available at /home/hudsonagent/java8
 # - Java7 to be available at /home/hudsonagent/java7
@@ -117,8 +134,9 @@ RUN wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/a
 # - "mvn" to be on the path
 RUN mkdir -p /home/hudsonagent && \
   ln -fs $JAVA_HOME /home/hudsonagent/java11 && \
-  ln -fs /usr/lib/jvm/adoptopenjdk-14-hotspot-amd64 /home/hudsonagent/java14 && \
-  ln -fs /usr/lib/jvm/adoptopenjdk-8-hotspot-amd64 /home/hudsonagent/java8 && \
+  ln -fs /usr/lib/jvm/jdk-17.0.1+12 /home/hudsonagent/java17 && \
+  ln -fs /usr/lib/jvm/jdk-16.0.2+7 /home/hudsonagent/java16 && \
+  ln -fs /usr/lib/jvm/jdk8u312-b07 /home/hudsonagent/java8 && \
   ln -fs /usr/lib/jvm/zulu-7-amd64 /home/hudsonagent/java7 && \
   ln -fs /home/hudsonagent/java8 /home/hudsonagent/java && \
   ln -fs /home/hudsonagent/java/bin/java /usr/bin/java && \

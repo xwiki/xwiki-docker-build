@@ -6,11 +6,21 @@ This image adds the following XWiki-required build tools over the
 [`jenkins/ssh-slave`](https://hub.docker.com/r/jenkinsci/ssh-slave) base image provided by Jenkins:
 * VNC Server
 * Docker Client (to run our Docker-based tests)
-* Recent Java 8 version (Amazon Corretto)
-* Firefox 32.0.1 (for running our Selenium-2 based functional tests) + newer version of Firefox (for running our Selenium-3 based functional tests that are not yet Docker tests)
+* Java 8 and 17 (Java 11 is provided by the base image)
+* Java 7 (Should be removed once no build is using it anymore)
+* Java 16 (Should be removed once Java 17 is fully supported by the XWiki build)
+* Firefox 32.0.1 (for running our Selenium-2 based functional tests)
+* Newer version of Firefox (for running our Selenium-3 based functional tests that are not yet Docker tests)
 
-This image is built automatically by 
-[Dockerhub](https://hub.docker.com/r/xwiki/build).
+# Building
+
+This image is no longer built automatically by [Dockerhub](https://hub.docker.com/r/xwiki/build) since they moved that feature as a paying feature.
+
+To build it locally:
+* `docker build -t xwiki/build .`
+
+To push it to Dockerhub:
+* `docker push xwiki/build:latest`
 
 # CI Usage
 
