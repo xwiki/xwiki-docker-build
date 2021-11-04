@@ -93,15 +93,16 @@ RUN wget --no-verbose -O /usr/lib/jvm/java8.tar.gz https://github.com/adoptium/t
   tar -C /usr/lib/jvm -xzf /usr/lib/jvm/java8.tar.gz && \
   rm /usr/lib/jvm/java8.tar.gz
 
-# Install Java 16. We need this because:
+# Install Java 14. We need this because:
 # - For Sonar, we need a JVM >= 11
-# - We should be using Java 17 (LTS and supposed to be supported by XWiki) but right now we cannot run XWiki's build on  \
-#   Java 17 because of Spoon (see https://github.com/INRIA/spoon/issues/4251).
-# Thus we use the next best java version which is Java 16.
+# - We should be using Java 17 (LTS and supposed to be supported by XWiki) but right now we cannot run XWiki's build on
+#   Java 16 or 17 because of Spoon (see https://github.com/INRIA/spoon/issues/4251).
+# Thus we use the next best java version which is Java 14.
 # TODO: Remove this when XWiki builds with Java 17.
-RUN wget --no-verbose -O /usr/lib/jvm/java16.tar.gz https://github.com/adoptium/temurin16-binaries/releases/download/jdk-16.0.2%2B7/OpenJDK16U-jdk_x64_linux_hotspot_16.0.2_7.tar.gz && \
-  tar -C /usr/lib/jvm -xzf /usr/lib/jvm/java16.tar.gz && \
-  rm /usr/lib/jvm/java16.tar.gz
+RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add - && \
+  add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ && \
+  apt-get update && \
+  apt-get --yes install adoptopenjdk-14-hotspot
 
 # Install Java 17
 RUN wget --no-verbose -O /usr/lib/jvm/java17.tar.gz https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.1%2B12/OpenJDK17U-jdk_x64_linux_hotspot_17.0.1_12.tar.gz && \
@@ -125,7 +126,8 @@ RUN wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/a
   rm apache-maven-$MAVEN_VERSION-bin.tar.gz
 
 # ci.xwiki.org expects:
-# - Java17 to be available at /home/hudsonagent/java17
+# - Java11 to be available at /home/hudsonagent/java17
+# - Java14 to be available at /home/hudsonagent/java14
 # - Java11 to be available at /home/hudsonagent/java11
 # - Java8 to be available at /home/hudsonagent/java8
 # - Java7 to be available at /home/hudsonagent/java7
@@ -135,7 +137,7 @@ RUN wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/a
 RUN mkdir -p /home/hudsonagent && \
   ln -fs $JAVA_HOME /home/hudsonagent/java11 && \
   ln -fs /usr/lib/jvm/jdk-17.0.1+12 /home/hudsonagent/java17 && \
-  ln -fs /usr/lib/jvm/jdk-16.0.2+7 /home/hudsonagent/java16 && \
+  ln -fs /usr/lib/jvm/adoptopenjdk-14-hotspot-amd64 /home/hudsonagent/java14 && \
   ln -fs /usr/lib/jvm/jdk8u312-b07 /home/hudsonagent/java8 && \
   ln -fs /usr/lib/jvm/zulu-7-amd64 /home/hudsonagent/java7 && \
   ln -fs /home/hudsonagent/java8 /home/hudsonagent/java && \
