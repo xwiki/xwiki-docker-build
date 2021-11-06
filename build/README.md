@@ -14,12 +14,12 @@ This image adds the following XWiki-required build tools over the
 
 # Building
 
-This image is no longer built automatically by [Dockerhub](https://hub.docker.com/r/xwiki/build) since they moved that feature as a paying feature.
+This image is [built automatically on each commit by a GitHub Action](https://github.com/xwiki/xwiki-docker-build/actions/workflows/build.yml)
+, which also publishes it to DockerHub. Note: We had to implement this since the image was no longer built 
+automatically by [Dockerhub](https://hub.docker.com/r/xwiki/build) when they moved that feature as a paying feature.
 
-To build it locally:
+To build it locally and push it to DockerHub:
 * `docker build -t xwiki/build .`
-
-To push it to Dockerhub:
 * `docker push xwiki/build:latest`
 
 # CI Usage
