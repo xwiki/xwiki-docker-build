@@ -26,6 +26,11 @@ on:
   push:
     branches:
       - 'master'
+  schedule:
+    # Every Monday at midnight (i.e. once per week). We rebuild it even if there are been no changes to the Dockerfile
+    # because there can be changes in the versions of softwares installed by apt-get and we want to be as up to date
+    # as possible.
+    - cron: '0 0 * * 1'
 
 jobs:
   docker:
