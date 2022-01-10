@@ -23,6 +23,8 @@
 name: build-ci
 
 on:
+  workflow_dispatch:
+    # Allows triggering the workflow manually just in case it's needed
   push:
     branches:
       - 'master'
