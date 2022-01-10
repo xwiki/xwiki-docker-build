@@ -36,6 +36,7 @@ LABEL maintainer="XWiki Development Team <committers@xwiki.org>"
 # - Docker CE
 # - lsof, to list open ports for debugging reasons
 # - netstats (through net-tools), for debugging reasons
+# - bc needed by some building scripts (e.g. CKEditor)
 # - other tools needed by the Dockerfile (such as zip, etc)
 RUN apt-get update && \
   apt-get --no-install-recommends -y install \
@@ -46,7 +47,8 @@ RUN apt-get update && \
     zip \
     lsof \
     software-properties-common \
-    net-tools
+    net-tools \
+    bc
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
 # Note: We must install the same version of Docker that is installed on the CI agents since we share the same docker
