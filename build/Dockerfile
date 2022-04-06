@@ -17,7 +17,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 # 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 # ---------------------------------------------------------------------------
-# TOOO: Upgrade to jenkins/ssh-agent:jdk11 since jenkins/ssh-slave is deprecated
+# TODO: Upgrade to jenkins/ssh-agent:jdk11 since jenkins/ssh-slave is deprecated
 FROM jenkins/ssh-slave:jdk11
 
 #    ____  ____  ____      ____  _   __        _
@@ -136,7 +136,7 @@ RUN wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/a
 # - Java8 to be available at /home/hudsonagent/java8
 # - Java7 to be available at /home/hudsonagent/java7
 # - Maven to be available at /home/hudsonagent/maven
-# - Default java to be Java 8
+# - Default java to be Java 11
 # - "mvn" to be on the path
 RUN mkdir -p /home/hudsonagent && \
   ln -fs $JAVA_HOME /home/hudsonagent/java11 && \
@@ -144,7 +144,7 @@ RUN mkdir -p /home/hudsonagent && \
   ln -fs /usr/lib/jvm/adoptopenjdk-14-hotspot-amd64 /home/hudsonagent/java14 && \
   ln -fs /usr/lib/jvm/jdk8u312-b07 /home/hudsonagent/java8 && \
   ln -fs /usr/lib/jvm/zulu-7-amd64 /home/hudsonagent/java7 && \
-  ln -fs /home/hudsonagent/java8 /home/hudsonagent/java && \
+  ln -fs /home/hudsonagent/java11 /home/hudsonagent/java && \
   ln -fs /home/hudsonagent/java/bin/java /usr/bin/java && \
   ln -fs /root/apache-maven-$MAVEN_VERSION /home/hudsonagent/maven && \
   # Use /etc/profile.d so that Maven is in all paths for all shells (sh, bash, etc), when using login, for example
