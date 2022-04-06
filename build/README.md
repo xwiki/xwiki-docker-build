@@ -11,7 +11,7 @@ This image adds the following XWiki-required build tools over the
 * Java 14 (Should be removed once Java 17 is fully supported by the XWiki build)
 * Firefox 32.0.1 (for running our Selenium-2 based functional tests)
 * Latest Maven version
-* Newer version of Firefox (for running our Selenium-3 based functional tests that are not yet Docker tests)
+* Newer version of Firefox (for running our Selenium-3+ based functional tests that are not yet Docker tests)
 
 # Building
 
@@ -85,7 +85,7 @@ Then:
 
 Notes:
 * If you want to map your machine's local Maven repository or other options, see below.
-* If you run some Selenium-based functional tests they require a DISPLAY. See below.
+* If you run some Selenium2-based functional tests they require a DISPLAY (Selenium3+-based tests don't require a display). See below.
   * Otherwise you'll get some failure such as `Caused by: org.openqa.selenium.WebDriverException: invalid argument: can't kill an exited process`.
 
 ### Scripted mode
