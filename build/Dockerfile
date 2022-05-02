@@ -130,7 +130,7 @@ RUN wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/a
   rm apache-maven-$MAVEN_VERSION-bin.tar.gz
 
 # ci.xwiki.org expects:
-# - Java11 to be available at /home/hudsonagent/java17
+# - Java17 to be available at /home/hudsonagent/java17
 # - Java14 to be available at /home/hudsonagent/java14
 # - Java11 to be available at /home/hudsonagent/java11
 # - Java8 to be available at /home/hudsonagent/java8
