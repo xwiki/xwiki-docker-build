@@ -64,9 +64,9 @@ RUN apt-get update && \
 # See https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting/#HFirefoxVersionUsed
 # Note 3: We also install FF 32.0.1 for older branches still using Selenium 2.x
 ENV FIREFOX_VERSION_1 101.0.1
-ENV FIREFOX_DOWNLOAD_URL_1="https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION_1/linux-x86_64/en-US/firefox-$FIREFOX_VERSION_1.tar.bz2"
+ENV FIREFOX_DOWNLOAD_URL_1="https://ftp.mozilla.org/pub/firefox/releases/$FIREFOX_VERSION_1/linux-x86_64/en-US/firefox-$FIREFOX_VERSION_1.tar.bz2"
 ENV FIREFOX_VERSION_2 32.0.1
-ENV FIREFOX_DOWNLOAD_URL_2="https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION_2/linux-x86_64/en-US/firefox-$FIREFOX_VERSION_2.tar.bz2"
+ENV FIREFOX_DOWNLOAD_URL_2="https://ftp.mozilla.org/pub/firefox/releases/$FIREFOX_VERSION_2/linux-x86_64/en-US/firefox-$FIREFOX_VERSION_2.tar.bz2"
 RUN apt-get --no-install-recommends -y install libasound2 && \
   wget --no-verbose -O /tmp/firefox1.tar.bz2 $FIREFOX_DOWNLOAD_URL_1 && \
   rm -rf /opt/firefox && \
@@ -101,15 +101,16 @@ RUN wget --no-verbose -O /usr/lib/jvm/java8.tar.gz https://github.com/adoptium/t
 #   Java 16 or 17 because of Spoon (see https://github.com/INRIA/spoon/issues/4251).
 # Thus we use the next best java version which is Java 14.
 # TODO: Remove this when XWiki builds with Java 17.
-RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add - && \
-  add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ && \
-  apt-get update && \
-  apt-get --yes install adoptopenjdk-14-hotspot
+RUN wget --no-verbose -O /usr/lib/jvm/java14.tar.gz https://download.java.net/java/GA/jdk14/076bab302c7b4508975440c56f6cc26a/36/GPL/openjdk-14_linux-x64_bin.tar.gz && \
+  tar -C /usr/lib/jvm -xzf /usr/lib/jvm/java14.tar.gz && \
+  rm /usr/lib/jvm/java14.tar.gz
 
 # Install Java 17
-RUN wget --no-verbose -O /usr/lib/jvm/java17.tar.gz https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.1%2B12/OpenJDK17U-jdk_x64_linux_hotspot_17.0.1_12.tar.gz && \
-  tar -C /usr/lib/jvm -xzf /usr/lib/jvm/java17.tar.gz && \
-  rm /usr/lib/jvm/java17.tar.gz
+RUN mkdir -p /etc/apt/keyrings && \
+  wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc && \
+  echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list && \
+  apt-get update && \
+  apt-get --yes install temurin-17-jdk
 
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
@@ -140,8 +141,8 @@ RUN wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/a
 # - "mvn" to be on the path
 RUN mkdir -p /home/hudsonagent && \
   ln -fs $JAVA_HOME /home/hudsonagent/java11 && \
-  ln -fs /usr/lib/jvm/jdk-17.0.1+12 /home/hudsonagent/java17 && \
-  ln -fs /usr/lib/jvm/adoptopenjdk-14-hotspot-amd64 /home/hudsonagent/java14 && \
+  ln -fs /usr/lib/jvm/temurin-17-jdk-amd64 /home/hudsonagent/java17 && \
+  ln -fs /usr/lib/jvm/jdk-14 /home/hudsonagent/java14 && \
   ln -fs /usr/lib/jvm/jdk8u312-b07 /home/hudsonagent/java8 && \
   ln -fs /usr/lib/jvm/zulu-7-amd64 /home/hudsonagent/java7 && \
   ln -fs /home/hudsonagent/java11 /home/hudsonagent/java && \
