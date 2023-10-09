@@ -106,11 +106,8 @@ RUN wget --no-verbose -O /usr/lib/jvm/java14.tar.gz https://download.java.net/ja
   rm /usr/lib/jvm/java14.tar.gz
 
 # Install Java 17
-RUN mkdir -p /etc/apt/keyrings && \
-  wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc && \
-  echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list && \
-  apt-get update && \
-  apt-get --yes install temurin-17-jdk
+RUN apt-get update && \
+  apt-get --no-install-recommends -y install zulu17-jdk-headless
 
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
@@ -141,7 +138,7 @@ RUN wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/a
 # - "mvn" to be on the path
 RUN mkdir -p /home/hudsonagent && \
   ln -fs $JAVA_HOME /home/hudsonagent/java11 && \
-  ln -fs /usr/lib/jvm/temurin-17-jdk-amd64 /home/hudsonagent/java17 && \
+  ln -fs /usr/lib/jvm/zulu17 /home/hudsonagent/java17 && \
   ln -fs /usr/lib/jvm/jdk-14 /home/hudsonagent/java14 && \
   ln -fs /usr/lib/jvm/jdk8u312-b07 /home/hudsonagent/java8 && \
   ln -fs /usr/lib/jvm/zulu-7-amd64 /home/hudsonagent/java7 && \
