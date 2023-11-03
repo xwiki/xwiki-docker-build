@@ -18,9 +18,9 @@
 # 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 # ---------------------------------------------------------------------------
 
-# Build the docker image inside the "build" directory and push it to DockerHub.
+# Build the docker image inside the "build-node" directory and push it to DockerHub.
 # Example taken from https://github.com/marketplace/actions/build-and-push-docker-images
-name: build-ci
+name: build-node-ci
 
 on:
   workflow_dispatch:
@@ -29,9 +29,8 @@ on:
     branches:
       - 'master'
   schedule:
-    # Every Monday at midnight (i.e. once per week). We rebuild it even if there are been no changes to the Dockerfile
-    # because there can be changes in the versions of softwares installed by apt-get and we want to be as up to date
-    # as possible.
+    # Every Monday at midnight (i.e., once per week). We rebuild it even if there are been no changes to the Dockerfile
+    # because there can be changes in the versions of dependencies and we want to be as up to date as possible.
     - cron: '0 0 * * 1'
 
 jobs:
@@ -57,6 +56,6 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: build
+          context: build-node
           push: true
-          tags: xwiki/build:latest
+          tags: xwiki/build-node:latest

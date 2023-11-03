@@ -17,10 +17,10 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 # 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 # ---------------------------------------------------------------------------
-# Initialize a Jenkins agent with node tooling installed (i.e., node, npm, and pnpm)
+# Initialize an agent with node tooling installed (i.e., node, npm, and pnpm)
 # We use a multi stages build to install pnpm in a node container, before copying the node executables the Jenkins
 # agent without persisting intermediate layers, for a lighter docker image.
-FROM node:20.9.0 as node_base
+FROM node:20.9.0 AS node_base
 # Enable corepack to be able to manipulate pnpm version.
 RUN corepack enable
 # Activate and install pnpm.
