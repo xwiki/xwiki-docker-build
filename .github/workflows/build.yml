@@ -18,7 +18,7 @@
 # 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 # ---------------------------------------------------------------------------
 
-# Build the docker image inside the "build" directory and push it to DockerHub.
+# Build the docker images inside the "build", and "build-node" directories and push them to DockerHub.
 # Example taken from https://github.com/marketplace/actions/build-and-push-docker-images
 name: build-ci
 
@@ -54,9 +54,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
-        name: Build and push
+        name: Build and push (build)
         uses: docker/build-push-action@v5
         with:
           context: build
           push: true
           tags: xwiki/build:latest
+      -
+        name: Build and push (build-node)
+        uses: docker/build-push-action@v5
+        with:
+          context: build-node
+          push: true
+          tags: xwiki/build-node:latest
