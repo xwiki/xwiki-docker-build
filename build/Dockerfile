@@ -63,7 +63,7 @@ RUN apt-get update && \
 # Note 2: The FF version we install is the version of the selenium/standalone-firefox-debug image used by TestContainers
 # See https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting/#HFirefoxVersionUsed
 # Note 3: We also install FF 32.0.1 for older branches still using Selenium 2.x
-ENV FIREFOX_VERSION_1 101.0.1
+ENV FIREFOX_VERSION_1 119.0.1
 ENV FIREFOX_DOWNLOAD_URL_1="https://ftp.mozilla.org/pub/firefox/releases/$FIREFOX_VERSION_1/linux-x86_64/en-US/firefox-$FIREFOX_VERSION_1.tar.bz2"
 ENV FIREFOX_VERSION_2 32.0.1
 ENV FIREFOX_DOWNLOAD_URL_2="https://ftp.mozilla.org/pub/firefox/releases/$FIREFOX_VERSION_2/linux-x86_64/en-US/firefox-$FIREFOX_VERSION_2.tar.bz2"
@@ -83,6 +83,7 @@ RUN apt-get --no-install-recommends -y install libasound2 && \
 WORKDIR /root
 
 # Add Zulu repository to install Java7
+# TODO: Remove once we don't have any Contrib extension using a minimum version of XWiki supporting Java 7.
 # Instructions from https://docs.azul.com/zulu/zuludocs/#ZuluUserGuide/PrepareZuluPlatform/AttachAPTRepositoryUbuntuOrDebianSys.htm
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9
 RUN echo 'deb http://repos.azulsystems.com/debian stable main' > /etc/apt/sources.list.d/zulu.list
@@ -90,22 +91,20 @@ RUN apt-get update && \
   apt-get --no-install-recommends -y install zulu-7
 
 # Install Java 8
-# TODO: Remove once we support Java 17 fully
+# TODO: Remove once we don't have any Contrib extension using a minimum version of XWiki supporting Java 8.
 RUN wget --no-verbose -O /usr/lib/jvm/java8.tar.gz https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u312-b07/OpenJDK8U-jdk_x64_linux_hotspot_8u312b07.tar.gz && \
   tar -C /usr/lib/jvm -xzf /usr/lib/jvm/java8.tar.gz && \
   rm /usr/lib/jvm/java8.tar.gz
 
-# Install Java 14. We need this because:
-# - For Sonar, we need a JVM >= 11
-# - We should be using Java 17 (LTS and supposed to be supported by XWiki) but right now we cannot run XWiki's build on
-#   Java 16 or 17 because of Spoon (see https://github.com/INRIA/spoon/issues/4251).
-# Thus we use the next best java version which is Java 14.
-# TODO: Remove this when XWiki builds with Java 17.
+# Install Java 14.
+# TODO: Remove once we don't have any Contrib extension using a minimum version of XWiki supporting Java 14.
+# TODO: This used to be for Sonarcloud which required a JVM > 11 at some point (it's now 17).
 RUN wget --no-verbose -O /usr/lib/jvm/java14.tar.gz https://download.java.net/java/GA/jdk14/076bab302c7b4508975440c56f6cc26a/36/GPL/openjdk-14_linux-x64_bin.tar.gz && \
   tar -C /usr/lib/jvm -xzf /usr/lib/jvm/java14.tar.gz && \
   rm /usr/lib/jvm/java14.tar.gz
 
 # Install Java 17
+# Needed for Sonarcloud now requiring Java 17.
 RUN apt-get update && \
   apt-get --no-install-recommends -y install zulu17-jdk-headless
 
