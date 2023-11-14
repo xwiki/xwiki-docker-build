@@ -106,7 +106,7 @@ RUN wget --no-verbose -O /usr/lib/jvm/java14.tar.gz https://download.java.net/ja
 # Install Java 17
 # Needed for Sonarcloud now requiring Java 17.
 RUN apt-get update && \
-  apt-get --no-install-recommends -y install zulu17-jdk-headless
+  apt-get --no-install-recommends -y install zulu17-jdk
 
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
