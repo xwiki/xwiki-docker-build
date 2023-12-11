@@ -31,3 +31,5 @@ FROM jenkins/ssh-agent:jdk11
 COPY --from=node_base /usr/local/lib/node_modules/ /usr/local/lib/node_modules/
 # Copy of the symbolic links to the installed node tools in a folder of the PATH.
 COPY --from=node_base /usr/local/bin/ /usr/local/bin/
+## Install playwright dependencies
+RUN pnpx playwright install-deps
