@@ -86,7 +86,7 @@ WORKDIR /root
 # TODO: Remove once we don't have any Contrib extension using a minimum version of XWiki supporting Java 7.
 # Instructions from https://docs.azul.com/zulu/zuludocs/#ZuluUserGuide/PrepareZuluPlatform/AttachAPTRepositoryUbuntuOrDebianSys.htm
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9
-RUN echo 'deb http://repos.azulsystems.com/debian stable main' > /etc/apt/sources.list.d/zulu.list
+RUN echo 'deb https://repos.azulsystems.com/debian stable main' > /etc/apt/sources.list.d/zulu.list
 RUN apt-get update && \
   apt-get --no-install-recommends -y install zulu-7
 
@@ -105,8 +105,14 @@ RUN wget --no-verbose -O /usr/lib/jvm/java14.tar.gz https://download.java.net/ja
 
 # Install Java 17
 # Needed for Sonarcloud now requiring Java 17.
-RUN apt-get update && \
-  apt-get --no-install-recommends -y install zulu17-jdk
+# TODO: Remove `-o "Acquire::https::Verify-Peer=false"` once the following errors are fixed:
+#   Err:8 https://repos.azul.com/zulu/deb stable Release
+#   Certificate verification failed: The certificate is NOT trusted. The certificate chain uses expired certificate.
+#      Could not handshake: Error in the certificate verification. [IP: 104.18.0.192 443]
+#   Reading package lists...
+#   E: The repository 'https://repos.azul.com/zulu/deb stable Release' does not have a Release file.
+RUN apt-get -o "Acquire::https::Verify-Peer=false" update && \
+  apt-get -o "Acquire::https::Verify-Peer=false" --no-install-recommends -y install zulu17-jdk
 
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
