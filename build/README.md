@@ -9,7 +9,6 @@ This image adds the following XWiki-required build tools over the
 * Java 7 (Should be removed once no build is using it anymore)
 * Java 8 (Should be removed once no build is using it anymore)
 * Java 11 is provided by the base image
-* Java 14 (Should be removed once no build is using it anymore)
 * Java 17 (the java version required to build XWiki master)
 * Firefox 32.0.1 (for running our Selenium-2 based functional tests)
 * Latest Maven version

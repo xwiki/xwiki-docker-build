@@ -96,13 +96,6 @@ RUN wget --no-verbose -O /usr/lib/jvm/java8.tar.gz https://github.com/adoptium/t
   tar -C /usr/lib/jvm -xzf /usr/lib/jvm/java8.tar.gz && \
   rm /usr/lib/jvm/java8.tar.gz
 
-# Install Java 14.
-# TODO: Remove once we don't have any Contrib extension using a minimum version of XWiki supporting Java 14.
-# TODO: This used to be for Sonarcloud which required a JVM > 11 at some point (it's now 17).
-RUN wget --no-verbose -O /usr/lib/jvm/java14.tar.gz https://download.java.net/java/GA/jdk14/076bab302c7b4508975440c56f6cc26a/36/GPL/openjdk-14_linux-x64_bin.tar.gz && \
-  tar -C /usr/lib/jvm -xzf /usr/lib/jvm/java14.tar.gz && \
-  rm /usr/lib/jvm/java14.tar.gz
-
 # Install Java 17
 # Needed for Sonarcloud now requiring Java 17.
 # TODO: Remove `-o "Acquire::https::Verify-Peer=false"` once the following errors are fixed:
@@ -135,7 +128,6 @@ RUN wget --no-check-certificate https://archive.apache.org/dist/maven/maven-3/$M
 
 # ci.xwiki.org expects:
 # - Java17 to be available at /home/hudsonagent/java17
-# - Java14 to be available at /home/hudsonagent/java14
 # - Java11 to be available at /home/hudsonagent/java11
 # - Java8 to be available at /home/hudsonagent/java8
 # - Java7 to be available at /home/hudsonagent/java7
@@ -145,7 +137,6 @@ RUN wget --no-check-certificate https://archive.apache.org/dist/maven/maven-3/$M
 RUN mkdir -p /home/hudsonagent && \
   ln -fs $JAVA_HOME /home/hudsonagent/java11 && \
   ln -fs /usr/lib/jvm/zulu17 /home/hudsonagent/java17 && \
-  ln -fs /usr/lib/jvm/jdk-14 /home/hudsonagent/java14 && \
   ln -fs /usr/lib/jvm/jdk8u312-b07 /home/hudsonagent/java8 && \
   ln -fs /usr/lib/jvm/zulu-7-amd64 /home/hudsonagent/java7 && \
   ln -fs /home/hudsonagent/java17 /home/hudsonagent/java && \
