@@ -140,7 +140,7 @@ RUN wget --no-check-certificate https://archive.apache.org/dist/maven/maven-3/$M
 # - Java8 to be available at /home/hudsonagent/java8
 # - Java7 to be available at /home/hudsonagent/java7
 # - Maven to be available at /home/hudsonagent/maven
-# - Default java to be Java 11
+# - Default java to be Java 17
 # - "mvn" to be on the path
 RUN mkdir -p /home/hudsonagent && \
   ln -fs $JAVA_HOME /home/hudsonagent/java11 && \
@@ -148,7 +148,7 @@ RUN mkdir -p /home/hudsonagent && \
   ln -fs /usr/lib/jvm/jdk-14 /home/hudsonagent/java14 && \
   ln -fs /usr/lib/jvm/jdk8u312-b07 /home/hudsonagent/java8 && \
   ln -fs /usr/lib/jvm/zulu-7-amd64 /home/hudsonagent/java7 && \
-  ln -fs /home/hudsonagent/java11 /home/hudsonagent/java && \
+  ln -fs /home/hudsonagent/java17 /home/hudsonagent/java && \
   ln -fs /home/hudsonagent/java/bin/java /usr/bin/java && \
   ln -fs /root/apache-maven-$MAVEN_VERSION /home/hudsonagent/maven && \
   # Use /etc/profile.d so that Maven is in all paths for all shells (sh, bash, etc), when using login, for example
