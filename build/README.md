@@ -39,7 +39,7 @@ To build it locally and push it to DockerHub:
      type=bind,source=/home/hudsonagent/.m2/settings.xml,destination=/root/.m2/settings.xml
      type=bind,source=/home/hudsonagent/.ssh,destination=/tmp/xwiki/.ssh,readonly
      type=bind,source=/home/hudsonagent/.xwiki,destination=/root/.xwiki
-     type=bind,source=/home/hudsonagent/.m2/.gradle-enterprise/keys.properties,destination=/root/.m2/.gradle-enterprise/keys.properties
+     type=bind,source=/home/hudsonagent/.m2/.develocity/keys.properties,destination=/root/.m2/.develocity/keys.properties
      ```
      Explanations:
        * `source=/var/run/docker.sock,destination=/var/run/docker.sock`: to allow Docker out of Docker (DOOD) and be able to use Docker 
@@ -48,8 +48,8 @@ To build it locally and push it to DockerHub:
        * `source=/home/hudsonagent/.ssh,destination=/tmp/xwiki/.ssh,readonly`: To allow some Jenkins pipeline (such as the Clover one) to 
          publish output to some other machines in the network (such as publishing clover zip reports to `maven.xwiki.org`).
        * `source=/home/hudsonagent/.xwiki,destination=/root/.xwiki`: Inside this directory a cache file is used by the XWiki Docker Test framework to make sure that Docker images are not constantly pulled from DockerHub (which has a 100 or 200 pull rate limit every 6 hours). Without this persistent cache file, the images will be pulled every time they're used.
-       * `source=/home/hudsonagent/.m2/.gradle-enterprise/keys.properties,destination=/root/.m2/.gradle-enterprise/keys.properties`: Authentication settings for
-         `ge.xwiki.org` (Gradle Enterprise). Used for build caching.
+       * `source=/home/hudsonagent/.m2/.develocity/keys.properties,destination=/root/.m2/.develocity/keys.properties`: Authentication settings for
+         `ge.xwiki.org` (Develocity). Used for build caching.
   * Remote File System Root: `/root`
   * User: `root`
 
