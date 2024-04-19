@@ -24,7 +24,7 @@ FROM node:20.12.2 AS node_base
 # Enable corepack to be able to manipulate pnpm version.
 RUN corepack enable
 # Activate and install pnpm.
-RUN corepack prepare pnpm@8.15.7 --activate
+RUN corepack prepare pnpm@9.0.4 --activate
 # The final docker image of the multi stage build.
 FROM jenkins/ssh-agent:jdk11
 # Copy of the location of the installed node tools.
