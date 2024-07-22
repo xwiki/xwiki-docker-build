@@ -122,7 +122,7 @@ RUN wget --no-check-certificate https://archive.apache.org/dist/maven/maven-3/$M
 # - "mvn" to be on the path
 RUN mkdir -p /home/hudsonagent && \
   ln -fs $JAVA_HOME /home/hudsonagent/java11 && \
-  ln -fs /usr/lib/jvm/jdk-17-oracle-x64 /home/hudsonagent/java17 && \
+  ln -fs /usr/lib/jvm/jdk-17.0.12-oracle-x64 /home/hudsonagent/java17 && \
   ln -fs /usr/lib/jvm/jdk8u312-b07 /home/hudsonagent/java8 && \
   ln -fs /home/hudsonagent/java17 /home/hudsonagent/java && \
   ln -fs /home/hudsonagent/java/bin/java /usr/bin/java && \
