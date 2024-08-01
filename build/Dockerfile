@@ -17,8 +17,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 # 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 # ---------------------------------------------------------------------------
-# TODO: Upgrade to jenkins/ssh-agent:jdk11 since jenkins/ssh-slave is deprecated
-FROM jenkins/ssh-slave:jdk11
+FROM jenkins/ssh-agent:jdk11
 
 #    ____  ____  ____      ____  _   __        _
 #   |_  _||_  _||_  _|    |_  _|(_) [  |  _   (_)
@@ -37,25 +36,33 @@ LABEL maintainer="XWiki Development Team <committers@xwiki.org>"
 # - lsof, to list open ports for debugging reasons
 # - netstats (through net-tools), for debugging reasons
 # - bc needed by some building scripts (e.g. CKEditor)
+# - wget needed by this Dockerfile to download Firefox
 # - other tools needed by the Dockerfile (such as zip, etc)
 RUN apt-get update && \
   apt-get --no-install-recommends -y install \
     apt-transport-https \
     ca-certificates \
     curl \
+    wget \
     gnupg2 \
     zip \
+    bzip2 \
     lsof \
     software-properties-common \
     net-tools \
     bc
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+RUN install -m 0755 -d /etc/apt/keyrings && \
+      curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc && \
+      chmod a+r /etc/apt/keyrings/docker.asc
+RUN echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  tee /etc/apt/sources.list.d/docker.list > /dev/null
 # Note: We must install the same version of Docker that is installed on the CI agents since we share the same docker
 # socket (docker on docker) and we want to reduce likelihood of issues.
 RUN apt-get update && \
   apt-get --no-install-recommends -y install \
-    xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce=5:20.10.8~3-0~debian-buster
+    xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce=5:24.0.7-1~debian.12~bookworm
 
 # Install Firefox.
 # Note 1: This won't be needed when we'll have all our functional tests use docker. However, as a transitional step,
