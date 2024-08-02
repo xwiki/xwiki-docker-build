@@ -70,8 +70,8 @@ RUN apt-get update && \
 # Note 2: The FF version we install is the version of the selenium/standalone-firefox-debug image used by TestContainers
 # See https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting/#HFirefoxVersionUsed
 # Note 3: We also install FF 32.0.1 for older branches still using Selenium 2.x
-ENV FIREFOX_VERSION_1 119.0.1
-ENV FIREFOX_DOWNLOAD_URL_1="https://ftp.mozilla.org/pub/firefox/releases/$FIREFOX_VERSION_1/linux-x86_64/en-US/firefox-$FIREFOX_VERSION_1.tar.bz2"
+ENV FIREFOX_VERSION_1 latest
+ENV FIREFOX_DOWNLOAD_URL_1="https://download.mozilla.org/?product=firefox-latest-ssl&os=linux64"
 ENV FIREFOX_VERSION_2 32.0.1
 ENV FIREFOX_DOWNLOAD_URL_2="https://ftp.mozilla.org/pub/firefox/releases/$FIREFOX_VERSION_2/linux-x86_64/en-US/firefox-$FIREFOX_VERSION_2.tar.bz2"
 RUN apt-get --no-install-recommends -y install libasound2 && \
