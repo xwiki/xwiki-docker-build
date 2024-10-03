@@ -20,11 +20,11 @@
 # Initialize an agent with node tooling installed (i.e., node, npm, and pnpm)
 # We use a multi stages build to install pnpm in a node container, before copying the node executables the Jenkins
 # agent without persisting intermediate layers, for a lighter docker image.
-FROM node:20.15.0 AS node_base
+FROM node:20.17.0 AS node_base
 # Enable corepack to be able to manipulate pnpm version.
 RUN corepack enable
 # Activate and install pnpm.
-RUN corepack prepare pnpm@9.11.0 --activate
+RUN corepack prepare pnpm@9.12.0 --activate
 # The final docker image of the multi stage build.
 FROM jenkins/ssh-agent:jdk11
 # Copy of the location of the installed node tools.
