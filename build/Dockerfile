@@ -98,7 +98,7 @@ RUN mkdir -p /usr/lib/jvm && \
 
 # Install Java 17
 RUN wget --no-verbose -O /usr/lib/jvm/java17.deb https://download.oracle.com/java/17/archive/jdk-17.0.12_linux-x64_bin.deb && \
- apt install /usr/lib/jvm/java17.deb && \
+ apt install /usr/lib/jvm/java17.deb -y && \
   rm /usr/lib/jvm/java17.deb
 
 # Copy VNC config files
