@@ -97,7 +97,7 @@ RUN mkdir -p /usr/lib/jvm && \
   rm /usr/lib/jvm/java8.tar.gz
 
 # Install Java 17
-RUN wget --no-verbose -O /usr/lib/jvm/java17.deb https://download.oracle.com/java/17/archive/jdk-17_linux-x64_bin.deb && \
+RUN wget --no-verbose -O /usr/lib/jvm/java17.deb https://download.oracle.com/java/17/archive/jdk-17.0.12_linux-x64_bin.deb && \
  apt install /usr/lib/jvm/java17.deb && \
   rm /usr/lib/jvm/java17.deb
 
