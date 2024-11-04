@@ -55,14 +55,14 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push (build)
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: build
           push: true
           tags: xwiki/build:latest
       -
         name: Build and push (build-node)
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: build-node
           push: true
