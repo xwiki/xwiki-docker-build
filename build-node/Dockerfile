@@ -26,7 +26,7 @@ RUN corepack enable
 # Activate and install pnpm.
 RUN corepack prepare pnpm@9.12.2 --activate
 # The final docker image of the multi stage build.
-FROM jenkins/ssh-agent:jdk17
+FROM jenkins/ssh-agent:jdk21
 # Copy of the location of the installed node tools.
 COPY --from=node_base /usr/local/lib/node_modules/ /usr/local/lib/node_modules/
 # Copy of the symbolic links to the installed node tools in a folder of the PATH.
