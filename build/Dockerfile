@@ -95,14 +95,8 @@ RUN wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | apt
 RUN echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
 RUN apt update
 
-# Install Java 8
-RUN apt install temurin-8-jdk
-
-# Install Java 11
-RUN apt install temurin-11-jdk
-
-# Install Java 17
-RUN apt install temurin-17-jdk
+# Install Java 8, 11 and 17
+RUN apt install -y temurin-8-jdk temurin-11-jdk temurin-17-jdk
 
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
