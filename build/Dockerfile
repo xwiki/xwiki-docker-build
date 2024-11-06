@@ -17,7 +17,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 # 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 # ---------------------------------------------------------------------------
-FROM jenkins/ssh-agent:jdk11
+FROM jenkins/ssh-agent:jdk21
 
 #    ____  ____  ____      ____  _   __        _
 #   |_  _||_  _||_  _|    |_  _|(_) [  |  _   (_)
@@ -89,17 +89,20 @@ RUN apt-get --no-install-recommends -y install libasound2 libdbus-glib-1-2 libgt
 
 WORKDIR /root
 
+# Setup Adoptium repository
+RUN apt install -y wget apt-transport-https gnupg
+RUN wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add -
+RUN echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+RUN apt update
+
 # Install Java 8
-# TODO: Remove once we don't have any Contrib extension using a minimum version of XWiki supporting Java 8.
-RUN mkdir -p /usr/lib/jvm && \
-  wget --no-verbose -O /usr/lib/jvm/java8.tar.gz https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u312-b07/OpenJDK8U-jdk_x64_linux_hotspot_8u312b07.tar.gz && \
-  tar -C /usr/lib/jvm -xzf /usr/lib/jvm/java8.tar.gz && \
-  rm /usr/lib/jvm/java8.tar.gz
+RUN apt install temurin-8-jdk
+
+# Install Java 11
+RUN apt install temurin-11-jdk
 
 # Install Java 17
-RUN wget --no-verbose -O /usr/lib/jvm/java17.deb https://download.oracle.com/java/17/archive/jdk-17.0.12_linux-x64_bin.deb && \
- apt install /usr/lib/jvm/java17.deb -y && \
-  rm /usr/lib/jvm/java17.deb
+RUN apt install temurin-17-jdk
 
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
@@ -124,13 +127,14 @@ RUN wget --no-check-certificate https://archive.apache.org/dist/maven/maven-3/$M
 # - Java17 to be available at /home/hudsonagent/java17
 # - Java11 to be available at /home/hudsonagent/java11
 # - Java8 to be available at /home/hudsonagent/java8
+# - Java17 to be available at /home/hudsonagent/java
+# - Default java to be /home/hudsonagent/java
 # - Maven to be available at /home/hudsonagent/maven
-# - Default java to be Java 17
 # - "mvn" to be on the path
 RUN mkdir -p /home/hudsonagent && \
-  ln -fs $JAVA_HOME /home/hudsonagent/java11 && \
-  ln -fs /usr/lib/jvm/jdk-17.0.12-oracle-x64 /home/hudsonagent/java17 && \
-  ln -fs /usr/lib/jvm/jdk8u312-b07 /home/hudsonagent/java8 && \
+  ln -fs /usr/lib/jvm/temurin-17-jdk-amd64 /home/hudsonagent/java17 && \
+  ln -fs /usr/lib/jvm/temurin-11-jdk-amd64/ /home/hudsonagent/java11 && \
+  ln -fs /usr/lib/jvm/temurin-8-jdk-amd64/ /home/hudsonagent/java8 && \
   ln -fs /home/hudsonagent/java17 /home/hudsonagent/java && \
   ln -fs /home/hudsonagent/java/bin/java /usr/bin/java && \
   ln -fs /root/apache-maven-$MAVEN_VERSION /home/hudsonagent/maven && \
