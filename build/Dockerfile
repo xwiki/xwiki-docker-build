@@ -130,7 +130,6 @@ RUN mkdir -p /home/hudsonagent && \
   ln -fs /usr/lib/jvm/temurin-11-jdk-amd64/ /home/hudsonagent/java11 && \
   ln -fs /usr/lib/jvm/temurin-8-jdk-amd64/ /home/hudsonagent/java8 && \
   ln -fs /home/hudsonagent/java17 /home/hudsonagent/java && \
-  ln -fs /home/hudsonagent/java/bin/java /usr/bin/java && \
   ln -fs /root/apache-maven-$MAVEN_VERSION /home/hudsonagent/maven && \
   # Use /etc/profile.d so that Maven is in all paths for all shells (sh, bash, etc), when using login, for example
   # with "docker exec -it ... bash -l".
