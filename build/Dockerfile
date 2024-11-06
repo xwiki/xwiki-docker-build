@@ -122,7 +122,6 @@ RUN wget --no-check-certificate https://archive.apache.org/dist/maven/maven-3/$M
 # - Java11 to be available at /home/hudsonagent/java11
 # - Java8 to be available at /home/hudsonagent/java8
 # - Java17 to be available at /home/hudsonagent/java
-# - Default java to be /home/hudsonagent/java
 # - Maven to be available at /home/hudsonagent/maven
 # - "mvn" to be on the path
 RUN mkdir -p /home/hudsonagent && \
