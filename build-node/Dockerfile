@@ -20,11 +20,11 @@
 # Initialize an agent with node tooling installed (i.e., node, npm, and pnpm)
 # We use a multi stages build to install pnpm in a node container, before copying the node executables the Jenkins
 # agent without persisting intermediate layers, for a lighter docker image.
-FROM node:22.13.0 AS node_base
+FROM node:22.13.1 AS node_base
 # Enable corepack to be able to manipulate pnpm version.
 RUN corepack enable
 # Activate and install pnpm.
-RUN corepack prepare pnpm@9.15.3 --activate
+RUN corepack prepare pnpm@9.15.4 --activate
 # The final docker image of the multi stage build.
 FROM jenkins/ssh-agent:jdk21
 # Copy of the location of the installed node tools.
@@ -32,4 +32,4 @@ COPY --from=node_base /usr/local/lib/node_modules/ /usr/local/lib/node_modules/
 # Copy of the symbolic links to the installed node tools in a folder of the PATH.
 COPY --from=node_base /usr/local/bin/ /usr/local/bin/
 ## Install playwright dependencies
-RUN pnpx playwright@1.49.1 install && pnpx playwright@1.49.1 install-deps
+RUN pnpx playwright@1.50.0 install && pnpx playwright@1.50.0 install-deps
