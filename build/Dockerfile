@@ -74,11 +74,11 @@ ENV FIREFOX_VERSION_1 latest
 ENV FIREFOX_DOWNLOAD_URL_1="https://download.mozilla.org/?product=firefox-latest-ssl&os=linux64"
 ENV FIREFOX_VERSION_2 32.0.1
 ENV FIREFOX_DOWNLOAD_URL_2="https://ftp.mozilla.org/pub/firefox/releases/$FIREFOX_VERSION_2/linux-x86_64/en-US/firefox-$FIREFOX_VERSION_2.tar.bz2"
-RUN apt-get --no-install-recommends -y install libasound2 libdbus-glib-1-2 libgtk2.0-0 && \
-  wget --no-verbose -O /tmp/firefox1.tar.bz2 $FIREFOX_DOWNLOAD_URL_1 && \
+RUN apt-get --no-install-recommends -y install libasound2 libdbus-glib-1-2 libgtk2.0-0 xz-utils && \
+  wget --no-verbose -O /tmp/firefox1.tar.xz $FIREFOX_DOWNLOAD_URL_1 && \
   rm -rf /opt/firefox && \
-  tar -C /opt -xjf /tmp/firefox1.tar.bz2 && \
-  rm /tmp/firefox1.tar.bz2 && \
+  tar -C /opt -xf /tmp/firefox1.tar.xz && \
+  rm /tmp/firefox1.tar.xz && \
   mv /opt/firefox /opt/firefox-$FIREFOX_VERSION_1 && \
   ln -fs /opt/firefox-$FIREFOX_VERSION_1/firefox /usr/bin/firefox && \
   wget --no-verbose -O /tmp/firefox2.tar.bz2 $FIREFOX_DOWNLOAD_URL_2 && \
