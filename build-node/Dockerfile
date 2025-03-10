@@ -25,7 +25,7 @@ FROM node:22.14.0 AS node_base
 RUN corepack enable
 RUN npm i -g corepack@latest
 # Activate and install pnpm.
-RUN corepack prepare pnpm@10.5.0 --activate
+RUN corepack prepare pnpm@10.6.1 --activate
 # The final docker image of the multi stage build.
 FROM jenkins/ssh-agent:jdk21
 # Copy of the location of the installed node tools.
@@ -33,4 +33,4 @@ COPY --from=node_base /usr/local/lib/node_modules/ /usr/local/lib/node_modules/
 # Copy of the symbolic links to the installed node tools in a folder of the PATH.
 COPY --from=node_base /usr/local/bin/ /usr/local/bin/
 ## Install playwright dependencies
-RUN pnpx playwright@1.50.1 install && pnpx playwright@1.50.1 install-deps
+RUN pnpx playwright@1.51.0 install && pnpx playwright@1.51.0 install-deps
