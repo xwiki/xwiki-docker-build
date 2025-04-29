@@ -20,7 +20,7 @@
 # Initialize an agent with node tooling installed (i.e., node, npm, and pnpm)
 # We use a multi stages build to install pnpm in a node container, before copying the node executables the Jenkins
 # agent without persisting intermediate layers, for a lighter docker image.
-FROM node:22.14.0 AS node_base
+FROM node:22.15.0 AS node_base
 # Enable corepack to be able to manipulate pnpm version.
 RUN corepack enable
 RUN npm i -g corepack@latest
