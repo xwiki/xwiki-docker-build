@@ -33,4 +33,4 @@ COPY --from=node_base /usr/local/lib/node_modules/ /usr/local/lib/node_modules/
 # Copy of the symbolic links to the installed node tools in a folder of the PATH.
 COPY --from=node_base /usr/local/bin/ /usr/local/bin/
 ## Install playwright dependencies
-RUN pnpx playwright@1.55.0 install && pnpx playwright@1.55.0 install-deps
+RUN pnpx playwright@1.55.1 install && pnpx playwright@1.55.1 install-deps
