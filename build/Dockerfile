@@ -93,8 +93,8 @@ RUN wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | apt
 RUN echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
 RUN apt update
 
-# Install Java 8, 11 and 17
-RUN apt install -y temurin-8-jdk temurin-11-jdk temurin-17-jdk
+# Install Java 8, 11, 17, 21 and 25
+RUN apt install -y temurin-8-jdk temurin-11-jdk temurin-17-jdk temurin-21-jdk temurin-25-jdk
 
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
@@ -116,6 +116,8 @@ RUN wget --no-check-certificate https://archive.apache.org/dist/maven/maven-3/$M
   rm apache-maven-$MAVEN_VERSION-bin.tar.gz
 
 # ci.xwiki.org expects:
+# - Java25 to be available at /home/hudsonagent/java25
+# - Java21 to be available at /home/hudsonagent/java21
 # - Java17 to be available at /home/hudsonagent/java17
 # - Java11 to be available at /home/hudsonagent/java11
 # - Java8 to be available at /home/hudsonagent/java8
@@ -123,6 +125,8 @@ RUN wget --no-check-certificate https://archive.apache.org/dist/maven/maven-3/$M
 # - Maven to be available at /home/hudsonagent/maven
 # - "mvn" to be on the path
 RUN mkdir -p /home/hudsonagent && \
+  ln -fs /usr/lib/jvm/temurin-25-jdk-amd64 /home/hudsonagent/java25 && \
+  ln -fs /usr/lib/jvm/temurin-21-jdk-amd64 /home/hudsonagent/java21 && \
   ln -fs /usr/lib/jvm/temurin-17-jdk-amd64 /home/hudsonagent/java17 && \
   ln -fs /usr/lib/jvm/temurin-11-jdk-amd64/ /home/hudsonagent/java11 && \
   ln -fs /usr/lib/jvm/temurin-8-jdk-amd64/ /home/hudsonagent/java8 && \
