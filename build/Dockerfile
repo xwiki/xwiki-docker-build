@@ -46,7 +46,6 @@ RUN apt-get update && \
     zip \
     bzip2 \
     lsof \
-    software-properties-common \
     net-tools \
     bc
 RUN install -m 0755 -d /etc/apt/keyrings && \
@@ -60,7 +59,7 @@ RUN echo \
 # socket (docker on docker) and we want to reduce likelihood of issues.
 RUN apt-get update && \
   apt-get --no-install-recommends -y install \
-    xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce=5:24.0.7-1~debian.12~bookworm
+    xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce=5:28.3.0-1~debian.13~trixie
 
 # Install Firefox.
 # Note 1: This won't be needed when we'll have all our functional tests use docker. However, as a transitional step,
@@ -87,9 +86,9 @@ RUN apt-get --no-install-recommends -y install libasound2 libdbus-glib-1-2 libgt
 
 WORKDIR /root
 
-# Setup Adoptium repository
-RUN apt install -y wget apt-transport-https gnupg
-RUN wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add -
+# Setup Adoptium repository (see https://adoptium.net/installation/linux#deb-installation-on-debian-or-ubuntu)
+RUN apt install -y wget apt-transport-https gpg
+RUN wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
 RUN echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
 RUN apt update
 
