@@ -95,6 +95,9 @@ RUN apt update
 # Install Java 8, 11, 17, 21 and 25
 RUN apt install -y temurin-8-jdk temurin-11-jdk temurin-17-jdk temurin-21-jdk temurin-25-jdk
 
+## Install dependencies required for playwright
+RUN apt install -y libnspr4 libnss3
+
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
 COPY vnc/.vnc .vnc
