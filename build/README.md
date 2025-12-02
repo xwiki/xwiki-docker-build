@@ -40,6 +40,7 @@ To build it locally and push it to DockerHub:
      type=bind,source=/home/hudsonagent/.ssh,destination=/tmp/xwiki/.ssh,readonly
      type=bind,source=/home/hudsonagent/.xwiki,destination=/root/.xwiki
      type=bind,source=/home/hudsonagent/.m2/.develocity/keys.properties,destination=/root/.m2/.develocity/keys.properties
+     type=bind,source=/home/hudsonagent/.npmrc,destination=/root/.npmrc
      ```
      Explanations:
        * `source=/var/run/docker.sock,destination=/var/run/docker.sock`: to allow Docker out of Docker (DOOD) and be able to use Docker 
