@@ -51,6 +51,8 @@ To build it locally and push it to DockerHub:
        * `source=/home/hudsonagent/.xwiki,destination=/root/.xwiki`: Inside this directory a cache file is used by the XWiki Docker Test framework to make sure that Docker images are not constantly pulled from DockerHub (which has a 100 or 200 pull rate limit every 6 hours). Without this persistent cache file, the images will be pulled every time they're used.
        * `source=/home/hudsonagent/.m2/.develocity/keys.properties,destination=/root/.m2/.develocity/keys.properties`: Authentication settings for
          `ge.xwiki.org` (Develocity). Used for build caching.
+       * `source=/home/hudsonagent/.npmrc,destination=/root/.npmrc`:
+        Configuration file for npm. In particular, contains the authentication settings for the npm registries.
   * Remote File System Root: `/root`
   * User: `root`
 
