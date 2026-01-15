@@ -134,7 +134,7 @@ RUN wget --no-check-certificate https://archive.apache.org/dist/maven/maven-3/$M
 # - Java17 to be available at /home/hudsonagent/java17
 # - Java11 to be available at /home/hudsonagent/java11
 # - Java8 to be available at /home/hudsonagent/java8
-# - Java17 to be available at /home/hudsonagent/java
+# - Java21 to be available at /home/hudsonagent/java
 # - Maven to be available at /home/hudsonagent/maven
 # - "mvn" to be on the path
 RUN mkdir -p /home/hudsonagent && \
@@ -143,7 +143,7 @@ RUN mkdir -p /home/hudsonagent && \
   ln -fs /usr/lib/jvm/temurin-17-jdk-amd64 /home/hudsonagent/java17 && \
   ln -fs /usr/lib/jvm/temurin-11-jdk-amd64/ /home/hudsonagent/java11 && \
   ln -fs /usr/lib/jvm/temurin-8-jdk-amd64/ /home/hudsonagent/java8 && \
-  ln -fs /home/hudsonagent/java17 /home/hudsonagent/java && \
+  ln -fs /home/hudsonagent/java21 /home/hudsonagent/java && \
   ln -fs /root/apache-maven-$MAVEN_VERSION /home/hudsonagent/maven && \
   # Use /etc/profile.d so that Maven is in all paths for all shells (sh, bash, etc), when using login, for example
   # with "docker exec -it ... bash -l".
