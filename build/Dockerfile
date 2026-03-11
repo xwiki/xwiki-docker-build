@@ -59,7 +59,7 @@ RUN echo \
 # socket (docker on docker) and we want to reduce likelihood of issues.
 RUN apt-get update && \
   apt-get --no-install-recommends -y install \
-    xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce=5:28.3.0-1~debian.13~trixie
+    xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce=5:29.3.0-1~debian.13~trixie
 
 # Install Firefox.
 # Note 1: This won't be needed when we'll have all our functional tests use docker. However, as a transitional step,
