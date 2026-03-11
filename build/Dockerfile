@@ -121,9 +121,9 @@ RUN chmod 0600 .vnc/passwd
 # Install the latest Maven version supported by the XWiki build, so that developers can benefit from the Gradle
 # Enterprise remote cache (https://ge.xwiki.org), as it'll only be triggered if the Maven version is the same on the
 # CI and locally (note: bugfix versions are not taken into account).
-ENV MAVEN_VERSION 3.9.11
+ENV MAVEN_VERSION 3.9.13
 # TODO: Remove --no-check-certificat when the certificate for archive.apache.org is good again (it's currently expired)
-RUN wget --no-check-certificate https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz && \
+RUN wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz && \
   tar -xvzf apache-maven-$MAVEN_VERSION-bin.tar.gz && \
   rm apache-maven-$MAVEN_VERSION-bin.tar.gz
 
