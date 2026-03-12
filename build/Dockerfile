@@ -100,8 +100,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends temurin-8-jdk t
     temurin-21-jdk temurin-25-jdk && \
   rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
-## Install dependencies required for playwright (run npx playwright install-deps chromium --dry-run on a \
-    jenkins/ssh-agent container)
+# Install dependencies required for playwright (run npx playwright install-deps chromium --dry-run on a
+# jenkins/ssh-agent container)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends libasound2t64 libatk-bridge2.0-0t64 libatk1.0-0t64 libatspi2.0-0t64  \
     libcairo2 libcups2t64 libdbus-1-3 libdrm2 libgbm1 libglib2.0-0t64 libnspr4 libnss3 libpango-1.0-0 libx11-6 libxcb1 \
