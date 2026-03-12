@@ -47,7 +47,8 @@ RUN apt-get update && \
     bzip2 \
     lsof \
     net-tools \
-    bc
+    bc && \
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 RUN install -m 0755 -d /etc/apt/keyrings && \
       curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc && \
       chmod a+r /etc/apt/keyrings/docker.asc
@@ -59,7 +60,8 @@ RUN echo \
 # socket (docker on docker) and we want to reduce likelihood of issues.
 RUN apt-get update && \
   apt-get --no-install-recommends -y install \
-    xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce=5:29.3.0-1~debian.12~bookworm
+    xfce4 xfce4-goodies xfonts-base tightvncserver docker-ce=5:29.3.0-1~debian.12~bookworm && \
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 # Install Firefox.
 # Note 1: This won't be needed when we'll have all our functional tests use docker. However, as a transitional step,
@@ -71,7 +73,8 @@ ENV FIREFOX_VERSION_1 latest
 ENV FIREFOX_DOWNLOAD_URL_1="https://download.mozilla.org/?product=firefox-latest-ssl&os=linux64"
 ENV FIREFOX_VERSION_2 32.0.1
 ENV FIREFOX_DOWNLOAD_URL_2="https://ftp.mozilla.org/pub/firefox/releases/$FIREFOX_VERSION_2/linux-x86_64/en-US/firefox-$FIREFOX_VERSION_2.tar.bz2"
-RUN apt-get --no-install-recommends -y install libasound2 libdbus-glib-1-2 libgtk2.0-0 xz-utils && \
+RUN apt-get update && apt-get --no-install-recommends -y install libasound2 libdbus-glib-1-2 libgtk2.0-0 xz-utils && \
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/* && \
   wget --no-verbose -O /tmp/firefox1.tar.xz $FIREFOX_DOWNLOAD_URL_1 && \
   rm -rf /opt/firefox && \
   tar -C /opt -xf /tmp/firefox1.tar.xz && \
@@ -87,16 +90,19 @@ RUN apt-get --no-install-recommends -y install libasound2 libdbus-glib-1-2 libgt
 WORKDIR /root
 
 # Setup Adoptium repository (see https://adoptium.net/installation/linux#deb-installation-on-debian-or-ubuntu)
-RUN apt install -y wget apt-transport-https gpg
+RUN apt-get install -y --no-install-recommends wget apt-transport-https gpg && \
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 RUN wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
 RUN echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
-RUN apt update
 
 # Install Java 8, 11, 17, 21 and 25
-RUN apt install -y temurin-8-jdk temurin-11-jdk temurin-17-jdk temurin-21-jdk temurin-25-jdk
+RUN apt-get update && apt-get install -y --no-install-recommends temurin-8-jdk temurin-11-jdk temurin-17-jdk \
+    temurin-21-jdk temurin-25-jdk && \
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 ## Install dependencies required for playwright
-RUN apt-get install -y --no-install-recommends libasound2 libatk-bridge2.0-0 libatk1.0-0 libatspi2.0-0 libcairo2  \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libasound2 libatk-bridge2.0-0 libatk1.0-0 libatspi2.0-0 libcairo2  \
     libcups2 libdbus-1-3 libdrm2 libgbm1 libglib2.0-0 libnspr4 libnss3 libpango-1.0-0 libx11-6 libxcb1 libxcomposite1 \
     libxdamage1 libxext6 libxfixes3 libxkbcommon0 libxrandr2 libcairo-gobject2 libdbus-glib-1-2 libfontconfig1  \
     libfreetype6 libgdk-pixbuf-2.0-0 libgtk-3-0 libharfbuzz0b libpangocairo-1.0-0 libx11-xcb1 libxcb-shm0 libxcursor1  \
@@ -106,7 +112,8 @@ RUN apt-get install -y --no-install-recommends libasound2 libatk-bridge2.0-0 lib
     libjpeg62-turbo liblcms2-2 libmanette-0.2-0 libnotify4 libopengl0 libopenjp2-7 libopus0 libpng16-16 libproxy1v5  \
     libsecret-1-0 libwayland-client0 libwayland-egl1 libwayland-server0 libwebp7 libwebpdemux2 libwoff1 libxml2  \
     libxslt1.1 libatomic1 libevent-2.1-7 libavif15 xvfb fonts-noto-color-emoji fonts-unifont xfonts-scalable  \
-    fonts-liberation fonts-ipafont-gothic fonts-wqy-zenhei fonts-tlwg-loma-otf fonts-freefont-ttf
+    fonts-liberation fonts-ipafont-gothic fonts-wqy-zenhei fonts-tlwg-loma-otf fonts-freefont-ttf && \
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 # Copy VNC config files
 COPY vnc/.Xauthority .Xauthority
@@ -158,7 +165,7 @@ RUN mkdir -p /root/.m2
 COPY maven/settings.xml /root/.m2/settings.xml
 
 # Set locales
-RUN apt-get --no-install-recommends -y install locales && \
+RUN apt-get update && apt-get --no-install-recommends -y install locales && \
   rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
   locale-gen
